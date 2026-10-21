@@ -23,6 +23,8 @@ async function fromMenu(page: Page): Promise<Page> {
   await page.locator('#sds-desktop').waitFor({state: 'visible'});
   await page.locator('#sds-taskbar button.start-button-img').click();
   const opened = page.context().waitForEvent('page');
+  const search=page.locator('#sds-desktop input[placeholder=Search], #sds-desktop input[placeholder=搜尋]');
+  if(await search.isVisible()) await search.fill('Vaultwarden');
   await page.getByRole('menuitem', {name: 'Vaultwarden', exact: true}).click();
   const vault = await opened;
   await vault.waitForLoadState('domcontentloaded');
@@ -40,23 +42,32 @@ test('DSM menu -> native OIDC -> master password -> saved item -> logout/reopen/
     const desktop = await context.newPage();
     const vault = await fromMenu(desktop);
     // An upstream email/SSO form here means automatic menu entry is incomplete.
-    const password = vault.getByRole('textbox', {name: 'Master password * (required)', exact: true});
+    const password = vault.locator('input[type=password]').nth(0);
     await expect(password).toBeVisible();
     await password.fill(master);
-    await vault.getByRole('textbox', {name: 'Confirm master password * ('}).fill(master);
+    await vault.locator('input[type=password]').nth(1).fill(master);
     await vault.getByRole('button', {name: 'Create account', exact: true}).click();
-    await expect(vault.getByTitle('All vaults', {exact: true})).toBeVisible();
+    const extension = vault.getByRole('button', {name:'Add it later',exact:true});
+    await Promise.race([extension.waitFor({state:'visible'}),vault.getByRole('heading',{name:'All vaults',exact:true}).waitFor({state:'visible'})]);
+    if(await extension.isVisible()) {
+      await extension.click();
+      await vault.getByRole('link',{name:'Skip to web app',exact:true}).click();
+    }
+    const skip=vault.getByRole('button',{name:'Skip',exact:true});
+    if(await skip.isVisible()) await skip.click();
+    await expect(vault.getByRole('heading',{name:'All vaults',exact:true})).toBeVisible();
     const label = 'DSM fixture ' + Date.now();
-    await vault.getByRole('button', {name: 'New item', exact: true}).click();
-    await vault.getByRole('textbox', {name: 'Item name * (required)', exact: true}).fill(label);
+    await vault.getByText('New item',{exact:true}).click();
+    await vault.getByRole('textbox', {name: /Item name/}).fill(label);
     await vault.getByRole('textbox', {name: 'Username', exact: true}).fill('fixture-user');
     await vault.getByRole('textbox', {name: 'Password', exact: true}).fill('disposable-item-value');
     await vault.getByRole('button', {name: 'Save', exact: true}).click();
     await expect(vault.getByText('Item added', {exact: true})).toBeVisible();
-    await vault.getByRole('button', {name: 'Close', exact: true}).click();
-    await vault.getByRole('button', {name: /Account options/}).click();
+    await vault.getByRole('dialog',{name:'View Login'}).getByRole('button',{name:'Close',exact:true}).click();
+    await vault.locator('button').filter({has:vault.locator('svg text')}).click();
     await vault.getByRole('menuitem', {name: /Log out/}).click();
-    await vault.getByRole('button', {name: 'Yes', exact: true}).click();
+    const confirm=vault.getByRole('button',{name:'Yes',exact:true});
+    if(await confirm.isVisible()) await confirm.click();
     await vault.close();
     const reopened = await fromMenu(desktop);
     await expect(reopened.getByRole('heading', {name: 'Your vault is locked'})).toBeVisible();
@@ -70,10 +81,8 @@ test('a DSM account without admission receives 403 at OIDC authorization', async
   const context = await session(browser, 'DSM_E2E_DENIED_PROFILE');
   try {
     const page = await context.newPage();
-    await page.goto(required('VW_E2E_URL'));
-    await page.locator('input[type=email].vw-email-sso').fill('denied@dsm.invalid');
-    const denied = page.waitForResponse(r => new URL(r.url()).pathname === '/_sso/authorize' && r.status() === 403);
-    await page.getByRole('button', {name: /Use single sign-on/}).click();
+    const denied = page.waitForResponse(r => new URL(r.url()).pathname === '/_sso/dsm-return' && r.status() === 403);
+    await page.goto(new URL('/#/sso?identifier=00000000-01DC-01DC-01DC-000000000000',required('VW_E2E_URL')).href);
     expect((await denied).status()).toBe(403);
     await expect(page.getByTitle('All vaults', {exact: true})).toHaveCount(0);
   } finally {await context.close();}

@@ -11,7 +11,7 @@ import (
 	gateway "github.com/synopackageland/syno-pkg-land-sdk/idgateway"
 )
 
-func front(t *testing.T, access string, passthrough []string) (http.Handler, *int, error) {
+func front(t *testing.T, access string, passthrough []string, providerOnly ...bool) (http.Handler, *int, error) {
 	t.Helper()
 	calls := new(int)
 	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -28,10 +28,12 @@ func front(t *testing.T, access string, passthrough []string) (http.Handler, *in
 	if err != nil {
 		t.Fatal(err)
 	}
+	upstreamAccess := ""
+	if len(providerOnly)>0 && providerOnly[0] {upstreamAccess="public"}
 	f, err := gateway.NewFront(gateway.FrontConfig{
 		Package: "SynoPkgVaultwarden", Upstream: upstream.URL,
 		Key: []byte(strings.Repeat("fixture-", 8)), Mode: gateway.ModeOIDC,
-		Access: access, Passthrough: passthrough, Provider: provider,
+		Access: access, UpstreamAccess: upstreamAccess, Passthrough: passthrough, Provider: provider,
 		Issuer: "http://127.0.0.1:29090", AuthorizeCGI: "/webman/3rdparty/SynoPkgVaultwarden/sso/authorize.cgi",
 		DSMPorts: gateway.DSMPorts{HTTP: 5000, HTTPS: 5001},
 	})

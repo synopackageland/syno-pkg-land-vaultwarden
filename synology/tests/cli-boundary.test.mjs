@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {readIdentityGateway} from '@synopackageland/cli/dist/standalone/identity-gateway.js';
+const {readIdentityGateway}=await import(process.env.SYNOPKGLAND_CLI_MODULE || '@synopackageland/cli/dist/standalone/identity-gateway.js');
 
 const daemon = {targets: {}};
 function parse(overrides = {}) {
@@ -44,4 +44,11 @@ test('a root passthrough is not a supported provider-only configuration', () => 
   const {value, diagnostics} = parse({passthrough: ['/']});
   assert.equal(value, undefined);
   assert.match(diagnostics[0].message, /passthrough/);
+});
+
+test('provider-only OIDC keeps issuer admission while opening App transport', () => {
+  const {value,diagnostics}=parse({access:'dsm-admins',upstream_access:'public',launch_path:'/#/sso?identifier=fixed'});
+  assert.deepEqual(diagnostics,[]);
+  assert.equal(value.access,'dsm-admins');
+  assert.equal(value.upstream_access,'public');
 });
