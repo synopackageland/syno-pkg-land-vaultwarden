@@ -1,0 +1,28 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:1.37.4@sha256:efb3cde962015fcc036b2ea625242248611943b27212ebf4392841fb30fad055
+    entrypoint: [/vaultwarden]
+    read_only: true
+    tmpfs: [/tmp]
+    environment:
+      ROCKET_ADDRESS: 127.0.0.1
+      ROCKET_PORT: "29800"
+      DATA_FOLDER: /var/tmp/vaultwarden
+      WEB_VAULT_ENABLED: "true"
+      SIGNUPS_ALLOWED: "false"
+      INVITATIONS_ALLOWED: "false"
+      SSO_ENABLED: "true"
+      SSO_ONLY: "true"
+      SSO_AUTH_ONLY_NOT_SESSION: "true"
+      SSO_SIGNUPS_ALLOWED: "true"
+      SSO_SIGNUPS_MATCH_EMAIL: "false"
+      SSO_ALLOW_UNKNOWN_EMAIL_VERIFICATION: "false"
+      SSO_AUTHORITY: http://127.0.0.1:29090
+      SSO_CLIENT_ID: vaultwarden
+      SSO_SCOPES: email profile
+      SSO_PKCE: "true"
+      SSO_DEBUG_TOKENS: "false"
+    volumes:
+      - data:/var/tmp
+volumes:
+  data:

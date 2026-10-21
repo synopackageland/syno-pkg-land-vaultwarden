@@ -1,0 +1,20 @@
+{
+  "name": "syno-pkg-land-vaultwarden",
+  "version": "1.37.4-0001",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "test:sdk": "cd tests/gateway && go test -v ./...",
+    "test:requirements": "cd tests/gateway && go test -v -tags requirements ./...",
+    "test:e2e": "playwright test --config playwright.config.ts",
+    "scan:public": "python3 scripts/public-scan.py",
+    "check": "synopkgland check --json",
+    "build": "synopkgland build --arch x86_64 --json"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@synopackageland/cli": "0.21.0"
+  }
+}
