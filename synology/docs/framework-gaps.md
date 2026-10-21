@@ -16,6 +16,9 @@
 - Container Manager data volumes remain after uninstall, including delete-data.
   The package account cannot delete those volumes; the native wizard must state
   retention. Administrative cleanup is separate from product uninstall behavior.
+- Native SDK installation settings replace App wizard/lifecycle patches. The
+  SDK owns validation, 0600 atomic files, upgrade/reinstall retention and
+  fail-closed admission; no App-side retained-path fallback remains.
 - The HTTPS origin wizard currently accepts a DNS hostname or IPv4 with the
   declared gateway port. IPv6 literals, a separate reverse-proxy hostname and
   subpaths need additional acceptance. Certificate trust is deployment-owned.

@@ -1,7 +1,0 @@
-#!/bin/sh
-set -eu
-[ "${SYNOPKG_PKG_STATUS:-}" != UPGRADE ] || exit 0
-case "${pkgwizard_remove_additional:-false}" in true|yes|1)
-  [ -n "${SYNOPKG_PKGVAR:-}" ] || exit 1
-  rm -f -- "$SYNOPKG_PKGVAR/vaultwarden-origin" ;;
-esac

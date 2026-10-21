@@ -8,6 +8,9 @@ description: Vaultwarden Web Vault with native DSM OIDC; a master password still
 maintainer: synopackageland
 os_min_ver: "7.2.1-69057"
 arches: [x86_64]
+install:
+  settings:
+    public_origin: {type: https-origin, label: Public HTTPS origin (include port 29443), required: true}
 entry: admin-only
 capabilities: {}
 compose:
@@ -24,7 +27,7 @@ compose:
         directories: [{base: /var/tmp, path: vaultwarden}]
         runtime:
           environment:
-            DOMAIN: {setting: public-origin}
+            DOMAIN: {setting: public_origin}
             SSO_CLIENT_SECRET: {oidc_client: vaultwarden}
 identity_gateway:
   sdk: 0.21.0

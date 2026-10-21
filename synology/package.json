@@ -11,8 +11,7 @@
     "test:e2e": "playwright test --config playwright.config.ts",
     "scan:public": "python3 scripts/public-scan.py",
     "check": "synopkgland check --json",
-    "build": "python3 scripts/build.py",
-    "test:settings": "python3 -m unittest discover -s tests -p 'test_*.py'"
+    "build": "synopkgland build --arch x86_64 --json"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
