@@ -1,0 +1,10 @@
+{
+  "cli": "0.21.0",
+  "templates": "0.21.0",
+  "sdk": "0.21.0",
+  "app": "0.21.0",
+  "executor": "0.20.0",
+  "ui_release_set": "0.12.5",
+  "source_overrides": false,
+  "status": "blocked-proposal"
+}

@@ -1,0 +1,42 @@
+# BLOCKED proposal: CLI/SDK 0.21.0 rejects public + oidc. Do not deploy.
+# This intentionally fails check instead of installing a DSM gate before native APIs.
+schema: 2
+package: SynoPkgVaultwarden
+version: 1.37.4
+build: 1
+displayname: Vaultwarden
+description: Vaultwarden Web Vault with native DSM OIDC; a master password still unlocks encryption.
+maintainer: synopackageland
+os_min_ver: "7.2.1-69057"
+arches: [x86_64]
+entry: admin-only
+capabilities: {}
+compose:
+  sdk: 0.21.0
+  files: [compose.yaml]
+  startup_timeout_seconds: 600
+  web: {service: vaultwarden, port: 29800, health: {path: /alive, status: 200}}
+  network: {egress: internet}
+  services:
+    vaultwarden:
+      network: host
+      address_env: ROCKET_ADDRESS
+      storage_init:
+        directories: [{base: /var/tmp, path: vaultwarden}]
+        runtime:
+          environment:
+            SSO_CLIENT_SECRET: {oidc_client: vaultwarden}
+identity_gateway:
+  sdk: 0.21.0
+  mode: oidc
+  access: public # Required: upstream owns App admission. Not supported by this SDK.
+  listen: {https: 29443}
+  email_domain: dsm.invalid
+  oidc:
+    native_login: true
+    issuer_port: 29090
+    clients:
+      - id: vaultwarden
+        redirect_paths: [/identity/connect/oidc-signin]
+        pkce: true
+ui: {launch: new-page}
