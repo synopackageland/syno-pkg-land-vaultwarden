@@ -1,0 +1,26 @@
+#!/bin/sh
+set -eu
+umask 077
+fail() { message='Enter the HTTPS origin used to open this App, including its gateway port.'; echo "$message" >&2; if [ -n "${SYNOPKG_TEMP_LOGFILE:-}" ]; then printf '%s\n' "$message" > "$SYNOPKG_TEMP_LOGFILE"; fi; exit 1; }
+origin=${pkgwizard_vaultwarden_origin:-}
+state_dir=${SYNOPKG_PKGVAR:-/var/packages/SynoPkgVaultwarden/var}
+if [ ! -d "$state_dir" ] && [ -n "${SYNOPKG_PKGDEST_VOL:-}" ]; then
+  state_dir=$SYNOPKG_PKGDEST_VOL/@appdata/SynoPkgVaultwarden
+fi
+if [ -z "$origin" ] && [ -f "$state_dir/vaultwarden-origin" ] && [ ! -L "$state_dir/vaultwarden-origin" ]; then
+  origin=$(cat "$state_dir/vaultwarden-origin")
+fi
+case "$origin" in https://*) authority=${origin#https://} ;; *) fail ;; esac
+case "$authority" in ''|*[!A-Za-z0-9.:-]*|*:*:*) fail ;; esac
+case "$authority" in *:29443) host=${authority%:29443} ;; *) fail ;; esac
+case "$host" in ''|.*|-*|*-|*..*|*.-*|*-.*|*[!A-Za-z0-9.-]*) fail ;; esac
+[ ${#host} -le 253 ] || fail
+target=${SYNOPKG_PKGINST_TEMP_DIR:-${SYNOPKG_PKGDEST:-}}
+[ -n "$target" ] || fail
+dir=$target/compose/settings
+[ -d "$dir" ] && [ ! -L "$dir" ] || fail
+file=$dir/public-origin.value
+[ ! -L "$file" ] || fail
+tmp=$file.$$
+(set -C; printf %s "$origin" > "$tmp") || exit 1
+mv -f "$tmp" "$file"

@@ -1,79 +1,89 @@
-# Vaultwarden for DSM：原生 OIDC 整合草案
+# Vaultwarden for DSM
 
-**目前受 SDK 0.21.0 阻擋，尚無可驗收／安裝的 SPK。** `dsm-package.yaml`
-刻意保留不受支援的 `mode: oidc` + `access: public`，讓 check/build 明確失敗。
-不能將其改成前置 DSM gate、列舉 API passthrough 或關閉 Vaultwarden 登入來交付。
+開發整合：沿用未修改的官方 Vaultwarden 1.37.4 映像與 Web Vault，所有包裝在
+`synology/`。**目前需要 SDK／CLI source override；尚未是正式發佈版本。**
+CLI/templates、SDK/App pins 暫維持 0.21.0，executor v0.20.0。正式 framework
+發版並完成重新驗收後才升 pins、發佈 SPK；四個套件應一起升到相容版本。
 
-沿用官方 Vaultwarden 1.37.4 映像與 Web Vault，所有整合檔案只放在 `synology/`。
-預定 SPK 版號為 **1.37.4-0001**；同一上游版本遞增 build，上游升版重設 0001。
-CLI/templates、SDK/App 均固定 0.21.0；executor 對應 0.20.0；templates 的 UI
-release-set 為 0.12.5，本 App 直接使用上游 Web Vault，沒有另建 Vue UI。
+## 登入與加密
 
-## 登入與主密碼
+DSM 主選單透過固定原生 `/#/sso?identifier=00000000-01DC-01DC-01DC-000000000000`
+入口開始 PKCE。issuer 要求 DSM 管理員與既有 DSM App 權限語意；上游 API、
+原生用戶端、WebSocket 由 Vaultwarden 自己驗證，不在前面加 DSM gate。
+目前 entry/access 均以管理員為限，不宣稱一般使用者驗收完成。
 
-DSM OIDC 只驗證帳號。**第一次仍須建立主密碼，之後仍須用主密碼解鎖保險庫。**
-DSM 密碼不能替代端對端加密的主密碼，也不儲存、代填或繞過主密碼。
-安裝說明／DSM App description 及上游的 Master password 畫面須保持此語義。
+**第一次仍須建主密碼，之後仍須主密碼解鎖保險庫。** DSM SSO 不能解密、代填
+或繞過主密碼。主密碼遺失無法由 DSM 管理員取回。
 
-草案設定 `SSO_ONLY=true`、`SIGNUPS_ALLOWED=false`、`SSO_SIGNUPS_ALLOWED=true`。
-一般註冊與本地帳密登入關閉，預期僅通過 DSM OIDC 的使用者可自動建立帳號。
-`SSO_SIGNUPS_MATCH_EMAIL=false` 避免把既有帳號依 email 自動配對；上游登入
-識別為簽章 claim 的 `issuer/sub`。SDK 產生的 `@dsm.invalid` email 是相容欄位，
-不是可收信的地址，不能用來識別／接管既有帳號。
+`SSO_ONLY=true`、`SIGNUPS_ALLOWED=false`、`SSO_SIGNUPS_ALLOWED=true`：只有經
+issuer 授權的新 SSO 身分可建立帳號。`SSO_SIGNUPS_MATCH_EMAIL=false` 避免依
+email 自動接管既有帳號；識別使用 issuer/sub。`@dsm.invalid` 只是相容欄位。
 
-`ADMIN_TOKEN` 不設定。上游 `/admin` 回傳停用說明（HTTP 200），管理功能不啟用；
-DSM admin claim 不會自動成為 Vaultwarden 的 ADMIN_TOKEN。一般 DSM 使用者的
-App 權限、停權／刪除／UID 重用及既有 App session 撤銷仍須 framework 與實機驗證。
-目前不宣稱支援一般使用者，也未實作 App 自有帳號刪除／root watcher workaround。
+`SSO_AUTH_ONLY_NOT_SESSION=true` 使用上游原生的「SSO 只管登入」模式。SDK 不提供
+refresh token；若綁定到短效 issuer token，Web Vault 會很快被登出。這項設定
+讓 App session 依 Vaultwarden 管理，**DSM 停權／登出不會即時撤銷既有 App
+sessions、API keys 或離線保險庫**。新登入仍須 DSM 授權。自動帳號刪除的限制見
+[framework-gaps](docs/framework-gaps.md)。
 
-## HTTPS 與原生用戶端
+`ADMIN_TOKEN` 不設定，`/admin` 保持上游停用說明；DSM admin claim 不等於
+Vaultwarden 的管理 token。
 
-Bitwarden 原生用戶端／瀏覽器擴充須使用可信 HTTPS 的完整專用 origin，不能只靠
-瀏覽器接受自簽憑證。`DOMAIN` 必須與實際對外 origin 完全一致（含非標準 port）；
-草案的 `https://vault.example:29443` 僅為範例，尚未有可交付的設定／驗證流程。
+## 安裝與 HTTPS origin
 
-完成整合後可由 DSM 原生 HTTPS ingress 或管理員設定的 DSM 反向代理提供可信
-憑證，反向代理須保留 Host、HTTPS 訊號、原生 API、OIDC callback 及
-`/notifications/hub` WebSocket upgrade。使用根路徑專用 origin；不承諾子路徑。
-這是部署方式說明，**未修改 DSM 反向代理或憑證設定，也未驗收其可用性**。
+1. 先讓管理員透過預定主機名稱開啟 DSM，並準備相符、用戶端受信任的 TLS 憑證。
+2. 在套件中心手動安裝開發 SPK，保留原有 SDK consent／資料沿用提示。
+3. 在新增的「HTTPS 網址」步驟輸入 `https://<開啟 DSM 的主機名稱>:29443`。
+   必須是根 origin，不能含帳密、路徑、query 或 fragment；目前此精靈接受 DNS
+   名稱／IPv4，未加入 IPv6 literal。驗收 fixture 可另用專屬 gateway port。
+4. 安裝精靈將值以非 root package account 寫入私有 setting，SDK 只讀掛載後作為
+   Vaultwarden `DOMAIN`。值會保留供升級使用；不是 SPK 內的固定示例網址。
+5. 從 DSM 主選單開啟 Vaultwarden，依上游流程建主密碼或解鎖。
 
-資料規劃為 SDK 管理的持久 named volume，掛載 `/var/tmp` 並由非 root
-`storage_init` 建立私有 `/var/tmp/vaultwarden`，非 root 埠為 29800。
-直接執行未修改的 `/vaultwarden`，跳過映像預設 shell setup；唯讀 rootfs、
-cap_drop ALL、no-new-privileges。OIDC consumer 依 SDK 契約使用 host network，
-上游 listener 限制在 loopback；這不是網路／主機隔離承諾。
-named volume 由 Container Manager 管理，**不是 pkgvar bind**；SDK 明確拒絕後者的
-安裝時序。keep/delete-data 均未做 DSM 實機驗收。
+App URL 與 DOMAIN 必須一致，包括 port。請透過相同主機名稱開啟 DSM menu；
+從另一個 NAS alias/IP 開啟可能使 OIDC callback origin 不一致。不要自動猜測
+對外域名。不同 hostname 的專用反向代理、子路徑與隨意 port 重寫未驗收。
+需要反向代理時，管理員須保留 Host、HTTPS 訊號、原生 API、OIDC callback 及
+`/notifications/hub` WebSocket upgrade，並重新驗證完整登入。
+
+瀏覽器接受自簽憑證不表示官方 Bitwarden CLI／擴充會信任它。缺少受信任、名稱
+相符的 HTTPS endpoint 時，只能記錄原生用戶端限制；不關閉 TLS 驗證、不修改
+DSM 憑證／反向代理設定來取得通過。
+
+## 執行期與資料
+
+官方映像以 package UID/GID 執行 `/vaultwarden`，loopback 上游 29800、唯讀 rootfs、
+cap_drop ALL、no-new-privileges。SDK storage-init 在持久 named volume 的
+`/var/tmp/vaultwarden` 建私有目錄；不修改上游 UI、映像或資料庫。
+
+升級保留資料與 origin；主密碼仍由使用者保管。**Container Manager 管理的 named
+volumes 目前會保留，即使在卸載精靈勾選 delete-data。** 精靈會明示保留項目；
+不要將選取 delete-data 說成已刪除 vault。管理員需另行確認、備份並依 Container
+Manager 的程序處理殘留 volume，套件不取得 root 或 Docker socket 代刪。
 
 ## 開發驗證
+
+在 Linux builder 使用合併後 SDK/CLI 與待審的 launcher/runtime-setting source
+capabilities。保持 published pins，明確設定開發 override，不將產物發佈。
 
 ```sh
 cd synology
 npm ci --ignore-scripts
-npm test                       # 已知 CLI 邊界與對照
-npm run test:sdk               # 已知 runtime 邊界與對照
-npm run test:requirements      # 目前兩項必要行為為紅燈
-npm run check                 # 目前拒絕 public + oidc
+npm test
+npm run test:settings
+npm run test:requirements
+SYNOPKGLAND_SDK_DIR=/path/to/sdk \
+SYNOPKGLAND_CLI_BIN=/path/to/cli/dist/bin.js npm run build
 ```
 
-測試須在受支援的 Linux builder 執行，Go 使用完整的已發佈 module 與 go.sum，
-不使用 source override。公開 npm 不代表 Go SDK 可匿名下載；使用既有合法
-credential helper 或保留原始 checksum 的 module cache，勿將憑證放進專案。
+Go requirements 測試需在 repo 外的暫存 module 用 `replace` 指向該 SDK source；
+不將本機路徑寫入 committed go.mod。CLI parser tests 可用
+`SYNOPKGLAND_CLI_MODULE=file:///path/to/cli/dist/standalone/identity-gateway.js`。
+如需離線重建，可用 `SPL_COMPOSE_IMAGE_PROOFS` 指向先前成功 build 的
+`compose/images.json`；SDK 會驗證原始 manifest/config 的 digest，不替換 image。
 
-`tests/runtime.py` 探測真實、digest 固定的官方映像，須提供 `SPL_TEST_IMAGE`、
-`SPL_STORAGE_INIT`（由 SDK 0.21.0 編譯的 helper），可用 `SPL_RESOURCE_PREFIX`
-隔離自己的 Docker fixture。完成後移除並讀回自己的 container／volume。
-此測試不代表 DSM 安裝、真實 DSM OIDC 或完整保險庫資料驗收。
+`build.py` 先呼叫 CLI，僅在外層 SPK 的原生安裝 wizard 加上 App 欄位，保留 SDK
+hooks、consent 與沿用資料提示，再跑 CLI inspect。沒有修改 payload 或上游 UI。
 
-瀏覽器套件：`npm run test:e2e`。需預先準備隔離的 fresh-account fixture、
-可信 HTTPS、DSM 登入 profile，設定 `DSM_E2E_URL`、`VW_E2E_URL`、
-`DSM_E2E_ADMIN_PROFILE`、`DSM_E2E_DENIED_PROFILE`、`VW_E2E_MASTER_PASSWORD_FILE`。
-profile／密碼檔必須位於 repo 外；`VW_E2E_OUTPUT_DIR` 指向私有證據資料夾。
-suite 不自動略過缺少的 fixture，不自動接受 TLS 錯誤，不修改帳號／DSM 設定。
-**目前僅完成 suite 收集，尚未執行真機瀏覽器驗收。**
-
-公開提交前以 `python3 scripts/public-scan.py --denylist <private-file>` 掃描；
-`--text <file>` 可一併掃 commit／PR 文字，`--history-base origin/main` 掃新增歷史。
-不要把私有驗收環境、profile、log 或截圖提交到公開 repo。
-
-詳見 [SDK 阻擋與驗收狀態](docs/validation.md)。
+e2e suite 使用 repo 外的 DSM profiles／主密碼檔、私有 output 目錄；缺少 fixture
+不算通過。公開提交前以 `scripts/public-scan.py --denylist <private-file>` 掃描。
+驗收範圍及尚未證明的部分見 [validation](docs/validation.md)。

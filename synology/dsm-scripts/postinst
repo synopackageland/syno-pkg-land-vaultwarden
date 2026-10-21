@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+umask 077
+source=${SYNOPKG_PKGDEST:-/var/packages/SynoPkgVaultwarden/target}/compose/settings/public-origin.value
+state=${SYNOPKG_PKGVAR:-/var/packages/SynoPkgVaultwarden/var}/vaultwarden-origin
+[ -f "$source" ] && [ ! -L "$source" ] && [ ! -L "$state" ] || exit 1
+tmp=$state.$$
+(set -C; cat "$source" > "$tmp") || exit 1
+mv -f "$tmp" "$state"

@@ -4,17 +4,17 @@ package proof
 
 import "testing"
 
-// These are product acceptance requirements. They intentionally stay red while
-// SDK 0.21.0 cannot express provider-only admission; diagnostic tests are separate.
+// Product requirements use explicit provider-only admission. Published pins stay
+// unchanged until the source capabilities are released.
 func TestRequiredProviderOnlyOIDC(t *testing.T) {
-	_, _, err := front(t, "public", nil)
+	_, _, err := front(t, "dsm-admins", nil, true)
 	if err != nil {
 		t.Fatalf("embedded OIDC must coexist with upstream-owned admission: %v", err)
 	}
 }
 
 func TestRequiredNativeTokenTransportWithoutDSMPreauthentication(t *testing.T) {
-	f, _, err := front(t, "", nil)
+	f, _, err := front(t, "dsm-admins", nil, true)
 	if err != nil {
 		t.Fatal(err)
 	}
