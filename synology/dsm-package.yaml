@@ -1,8 +1,7 @@
-# Development: requires SDK/CLI source capabilities pending release. Pins stay unchanged.
 schema: 2
 package: SynoPkgVaultwarden
 version: 1.37.4
-build: 1
+build: 2
 displayname: Vaultwarden
 description: Vaultwarden Web Vault with native DSM OIDC; a master password still unlocks encryption.
 maintainer: synopackageland
@@ -14,7 +13,7 @@ install:
 entry: admin-only
 capabilities: {}
 compose:
-  sdk: 0.21.0
+  sdk: 0.22.0
   files: [compose.yaml]
   startup_timeout_seconds: 600
   web: {service: vaultwarden, port: 29800, health: {path: /alive, status: 200}}
@@ -30,7 +29,7 @@ compose:
             DOMAIN: {setting: public_origin}
             SSO_CLIENT_SECRET: {oidc_client: vaultwarden}
 identity_gateway:
-  sdk: 0.21.0
+  sdk: 0.22.0
   mode: oidc
   access: dsm-admins
   upstream_access: public

@@ -1,9 +1,7 @@
 # Vaultwarden for DSM
 
-開發整合：沿用未修改的官方 Vaultwarden 1.37.4 映像與 Web Vault，所有包裝在
-`synology/`。**目前需要 SDK／CLI source override；尚未是正式發佈版本。**
-CLI/templates、SDK/App pins 暫維持 0.21.0，executor v0.20.0。正式 framework
-發版並完成重新驗收後才升 pins、發佈 SPK；四個套件應一起升到相容版本。
+沿用未修改的官方 Vaultwarden 1.37.4 映像與 Web Vault，所有包裝在
+`synology/`。使用正式 CLI/templates、SDK/App 0.22.0、executor/v0.20.0；UI release set 固定 0.12.5。
 
 ## 登入與加密
 
@@ -31,7 +29,7 @@ Vaultwarden 的管理 token。
 ## 安裝與 HTTPS origin
 
 1. 先讓管理員透過預定主機名稱開啟 DSM，並準備相符、用戶端受信任的 TLS 憑證。
-2. 在套件中心手動安裝開發 SPK，保留原有 SDK consent／資料沿用提示。
+2. 在套件中心手動安裝 SPK，保留原有 SDK consent／資料沿用提示。
 3. 在 SDK 原生「Public HTTPS origin」欄位輸入 `https://<開啟 DSM 的主機名稱>:29443`。
    必須是根 origin，不能含帳密、路徑、query 或 fragment；目前此精靈接受 DNS
    名稱／IPv4，未加入 IPv6 literal。驗收 fixture 可另用專屬 gateway port。
@@ -62,21 +60,17 @@ Manager 的程序處理殘留 volume，套件不取得 root 或 Docker socket �
 
 ## 開發驗證
 
-在 Linux builder 使用合併後 launcher 與待審的 SDK/CLI native install.settings source
-capabilities。保持 published pins，明確設定開發 override，不將產物發佈。
+在 Linux builder 使用正式 CLI/templates、SDK/App 0.22.0。正式產物不使用 source override 或 Go replace。
 
 ```sh
 cd synology
 npm ci --ignore-scripts
 npm test
 npm run test:requirements
-SYNOPKGLAND_SDK_DIR=/path/to/sdk \
-node /path/to/cli/dist/bin.js --project . build --arch x86_64 --json
+npm run check
+npm run build
 ```
 
-Go requirements 測試需在 repo 外的暫存 module 用 `replace` 指向該 SDK source；
-不將本機路徑寫入 committed go.mod。CLI parser tests 可用
-`SYNOPKGLAND_CLI_MODULE=file:///path/to/cli/dist/standalone/identity-gateway.js`。
 CLI 原生 build 會產生安裝欄位及 SDK 設定控制器，check／build／inspect 會列出
 宣告但不列出私有值。App 只宣告 `install.settings.public_origin` 及
 `DOMAIN: {setting: public_origin}`，不提供安裝設定 shell hooks 或重寫 SPK。
