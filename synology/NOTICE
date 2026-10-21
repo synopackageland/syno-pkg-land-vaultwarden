@@ -1,0 +1,13 @@
+Vaultwarden for DSM integration proposal
+
+Wrapper-owned files under synology/: MIT, Copyright (c) 2026 synopkgland.
+Vaultwarden: AGPL-3.0-only; see ../LICENSE.txt and LICENSES/Vaultwarden-AGPL-3.0.txt.
+Official upstream source: https://github.com/dani-garcia/vaultwarden/tree/1.37.4
+Official image: https://hub.docker.com/r/vaultwarden/server
+The official image's revision label matches the selected release source commit.
+Its included Web Vault and dependencies retain their upstream licenses.
+
+This proposal does not redistribute an image, SPK or compiled SDK. Before any
+distribution, complete the image/Web Vault dependency notice and Corresponding
+Source inventory; retaining one source tag alone is not a complete inventory.
+Development-only dependencies retain the licenses in their published packages.
