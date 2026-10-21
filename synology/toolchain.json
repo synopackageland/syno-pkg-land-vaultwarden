@@ -11,6 +11,7 @@
     "provider_only_oidc": "https://github.com/synopackageland/syno-pkg-land-sdk/pull/48",
     "fixed_launch_path": "https://github.com/synopackageland/syno-pkg-land-sdk/pull/51",
     "runtime_settings": "https://github.com/synopackageland/syno-pkg-land-sdk/pull/52",
-    "cli_launch_path": "https://github.com/synopackageland/syno-pkg-land-cli/pull/39"
+    "cli_launch_path": "https://github.com/synopackageland/syno-pkg-land-cli/pull/39",
+    "native_install_settings": "https://github.com/synopackageland/syno-pkg-land-cli/pull/40"
   }
 }

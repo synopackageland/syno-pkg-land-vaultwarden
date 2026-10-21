@@ -40,13 +40,13 @@ no certificate/reverse-proxy settings were changed. Native-client login remains
 unverified. Browser acceptance in that environment does not establish trust for
 CLI/extensions.
 
-Installation experiments exposed two App-hook lifecycle assumptions: preinst
-uses the incoming payload directory, and the retained pkgvar symlink can be
-absent during upgrade. The hooks now use the documented incoming directory and
-the selected volume's exact retained App-data path. A failed upgrade also left
-an owned stopped Container Manager project entry, which required explicit
-administrative recovery before retry. No shared project was changed. Successful
-final upgrade is distinct from that recovery evidence.
+The native installation-settings revision removes all App wizard rewriting and
+preinst/postinst setting logic. CLI-generated wizard fields and SDK-owned
+validation, private atomic writes and retained-state lookup replace those
+patches. The SDK owns incoming payload and DSM physical pkgvar timing. Previous
+successful device flows remain historical evidence; the native-settings revision
+receives a focused fresh-install/menu/unlock/upgrade/configuration-retention
+check, explicitly using source overrides.
 
 Registry diagnostics can report Docker Hub access denial while Container Manager
 runs the pinned image from its existing configured mirror/cache. The build used
@@ -56,9 +56,24 @@ from every network or registry configuration.
 
 Local verification includes SDK fast gate for the affected Go segment, final
 runtime-setting tests, CLI build and affected launcher tests, App parser/runtime
-requirements, and native installer input tests. The published-version tests
+requirements, and native SDK setting lifecycle / CLI SPK mutation tests. The published-version tests
 remain distinguishable from source-override runs; full release gate and released
 SPK acceptance are separate. Private logs/screenshots/session data are excluded
 from the public repository.
 
 Account deletion and deployment limits are in [framework-gaps](framework-gaps.md).
+
+Native installation-settings follow-up: the focused source-override build was
+fresh-installed through DSM's generated wizard, followed by automatic menu OIDC,
+master-password creation, logout and a second menu login/unlock. SDK settings
+in both the installed payload and retained App data were package-owned mode
+0600 with identical content digests. The initial isolated development fixture
+had a mismatched issuer port; it was corrected and rebuilt before the successful
+fresh run. This was a test-fixture correction, not an upstream or App workaround.
+The same revision upgraded from `1.37.4-0001` to `0002` without new wizard values;
+all lifecycle hooks returned zero, the package reached running state, and both
+0600 setting files retained their original digest. Owned test resources were
+then removed and read back. Named-volume cleanup was an explicit administrative
+fixture operation, not a claim that the product's delete-data choice erases
+Container Manager volumes. The registry diagnostic still reported access denial
+while the cached pinned image ran; fresh pulls remain a separate limitation.

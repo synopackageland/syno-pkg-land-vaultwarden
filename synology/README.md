@@ -32,10 +32,10 @@ Vaultwarden 的管理 token。
 
 1. 先讓管理員透過預定主機名稱開啟 DSM，並準備相符、用戶端受信任的 TLS 憑證。
 2. 在套件中心手動安裝開發 SPK，保留原有 SDK consent／資料沿用提示。
-3. 在新增的「HTTPS 網址」步驟輸入 `https://<開啟 DSM 的主機名稱>:29443`。
+3. 在 SDK 原生「Public HTTPS origin」欄位輸入 `https://<開啟 DSM 的主機名稱>:29443`。
    必須是根 origin，不能含帳密、路徑、query 或 fragment；目前此精靈接受 DNS
    名稱／IPv4，未加入 IPv6 literal。驗收 fixture 可另用專屬 gateway port。
-4. 安裝精靈將值以非 root package account 寫入私有 setting，SDK 只讀掛載後作為
+4. SDK hooks 以非 root package account 驗證並原子寫入 0600 私有設定，唯讀掛載後作為
    Vaultwarden `DOMAIN`。值會保留供升級使用；不是 SPK 內的固定示例網址。
 5. 從 DSM 主選單開啟 Vaultwarden，依上游流程建主密碼或解鎖。
 
@@ -62,27 +62,25 @@ Manager 的程序處理殘留 volume，套件不取得 root 或 Docker socket �
 
 ## 開發驗證
 
-在 Linux builder 使用合併後 SDK/CLI 與待審的 launcher/runtime-setting source
+在 Linux builder 使用合併後 launcher 與待審的 SDK/CLI native install.settings source
 capabilities。保持 published pins，明確設定開發 override，不將產物發佈。
 
 ```sh
 cd synology
 npm ci --ignore-scripts
 npm test
-npm run test:settings
 npm run test:requirements
 SYNOPKGLAND_SDK_DIR=/path/to/sdk \
-SYNOPKGLAND_CLI_BIN=/path/to/cli/dist/bin.js npm run build
+node /path/to/cli/dist/bin.js --project . build --arch x86_64 --json
 ```
 
 Go requirements 測試需在 repo 外的暫存 module 用 `replace` 指向該 SDK source；
 不將本機路徑寫入 committed go.mod。CLI parser tests 可用
 `SYNOPKGLAND_CLI_MODULE=file:///path/to/cli/dist/standalone/identity-gateway.js`。
-如需離線重建，可用 `SPL_COMPOSE_IMAGE_PROOFS` 指向先前成功 build 的
-`compose/images.json`；SDK 會驗證原始 manifest/config 的 digest，不替換 image。
-
-`build.py` 先呼叫 CLI，僅在外層 SPK 的原生安裝 wizard 加上 App 欄位，保留 SDK
-hooks、consent 與沿用資料提示，再跑 CLI inspect。沒有修改 payload 或上游 UI。
+CLI 原生 build 會產生安裝欄位及 SDK 設定控制器，check／build／inspect 會列出
+宣告但不列出私有值。App 只宣告 `install.settings.public_origin` 及
+`DOMAIN: {setting: public_origin}`，不提供安裝設定 shell hooks 或重寫 SPK。
+安裝時空白沿用已保留設定；首次安裝缺值會拒絕，升級／重裝由 SDK 保留。
 
 e2e suite 使用 repo 外的 DSM profiles／主密碼檔、私有 output 目錄；缺少 fixture
 不算通過。公開提交前以 `scripts/public-scan.py --denylist <private-file>` 掃描。
