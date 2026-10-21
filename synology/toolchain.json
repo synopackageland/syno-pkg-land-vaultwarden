@@ -1,17 +1,10 @@
 {
-  "cli": "0.21.0",
-  "templates": "0.21.0",
-  "sdk": "0.21.0",
-  "app": "0.21.0",
+  "cli": "0.22.0",
+  "templates": "0.22.0",
+  "sdk": "0.22.0",
+  "app": "0.22.0",
   "executor": "0.20.0",
   "ui_release_set": "0.12.5",
-  "source_overrides": true,
-  "status": "development-only-awaiting-framework-release",
-  "required_capabilities": {
-    "provider_only_oidc": "https://github.com/synopackageland/syno-pkg-land-sdk/pull/48",
-    "fixed_launch_path": "https://github.com/synopackageland/syno-pkg-land-sdk/pull/51",
-    "runtime_settings": "https://github.com/synopackageland/syno-pkg-land-sdk/pull/52",
-    "cli_launch_path": "https://github.com/synopackageland/syno-pkg-land-cli/pull/39",
-    "native_install_settings": "https://github.com/synopackageland/syno-pkg-land-cli/pull/40"
-  }
+  "source_overrides": false,
+  "status": "published-framework-pins"
 }

@@ -1,8 +1,8 @@
 # Framework and upstream boundaries
 
-- Published 0.21.x does not provide provider-only OIDC, a fixed fragment launcher
-  and installation settings together. Development acceptance uses explicit
-  SDK/CLI sources. Retest the released combination before changing pins.
+- Published SDK/CLI 0.22.0 provides provider-only OIDC, the fixed fragment
+  launcher and native installation settings. Production builds use the released
+  packages with executor/v0.20.0 and no source overrides.
 - Account deletion: upstream exposes `POST /admin/users/<id>/delete`, but it is
   registered only with an ADMIN_TOKEN. Enabling that token also enables `/admin`,
   conflicting with this package's disabled-admin boundary. The disabled mode has

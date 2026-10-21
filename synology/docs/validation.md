@@ -1,8 +1,13 @@
-# Development validation
+# Validation record
 
-Status: development review; all device artifacts use explicit SDK/CLI source
-overrides and must not be published. Published dependency pins stay at 0.21.0
-until a compatible framework release is approved and retested.
+The current production candidate uses released CLI/templates/SDK/App 0.22.0,
+UI 0.12.5 and executor/v0.20.0, without source overrides or Go replace.
+
+## Historical development acceptance
+
+The device observations in this section used explicit SDK/CLI source overrides.
+Those historical artifacts must not be published and are not relabelled as
+released-dependency evidence.
 
 The merged provider-only implementation separates native App transport from DSM
 issuer admission. Additional development PRs provide a fixed SPA menu destination
@@ -77,3 +82,23 @@ then removed and read back. Named-volume cleanup was an explicit administrative
 fixture operation, not a claim that the product's delete-data choice erases
 Container Manager volumes. The registry diagnostic still reported access denial
 while the cached pinned image ran; fresh pulls remain a separate limitation.
+
+## Released 0.22.0 candidate acceptance
+
+The production `1.37.4-0002` SPK was built from the published dependency bytes:
+CLI/templates/SDK/App 0.22.0, UI 0.12.5 and executor/v0.20.0. Check/build/inspect
+passed with no findings. Production source and expanded-SPK public scans pass.
+
+A fresh DSM 7.3.2 x86_64 installation used the generated native HTTPS-origin
+setting. Native start and the DSM main-menu launcher reached upstream SSO
+master-password setup. A master password was created and one encrypted login
+item was saved and read back in the native Web Vault. Native stop/start
+returned the package to running state. Official-client trusted TLS remains
+unverified; the historical TLS limitation above is unchanged.
+
+After native restart, a fresh upstream SSO flow required the master password.
+Unlocking with that password displayed the saved encrypted login item.
+
+Delete-data uninstall displayed COMPOSE_DATA_RETAINED. After package and
+containers were absent, only the disposable acceptance volumes and upload
+were removed separately; DSM package identity was retained.

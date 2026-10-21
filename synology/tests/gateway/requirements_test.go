@@ -4,8 +4,7 @@ package proof
 
 import "testing"
 
-// Product requirements use explicit provider-only admission. Published pins stay
-// unchanged until the source capabilities are released.
+// Product requirements exercise explicit provider-only admission.
 func TestRequiredProviderOnlyOIDC(t *testing.T) {
 	_, _, err := front(t, "dsm-admins", nil, true)
 	if err != nil {
