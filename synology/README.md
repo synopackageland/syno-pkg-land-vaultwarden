@@ -79,3 +79,7 @@ CLI 原生 build 會產生安裝欄位及 SDK 設定控制器，check／build／
 e2e suite 使用 repo 外的 DSM profiles／主密碼檔、私有 output 目錄；缺少 fixture
 不算通過。公開提交前以 `scripts/public-scan.py --denylist <private-file>` 掃描。
 驗收範圍及尚未證明的部分見 [validation](docs/validation.md)。
+
+## Official package icon
+
+The DSM package uses the official project artwork, preserved unchanged and only resized/rasterized to the required icon sizes. See [assets/icon-source.json](assets/icon-source.json) for the source revision and original SHA-256, and [NOTICE](NOTICE) for attribution and the applicable image license. The package ID remains `SynoPkgVaultwarden` for upgrade continuity.

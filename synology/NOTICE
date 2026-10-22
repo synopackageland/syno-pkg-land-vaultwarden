@@ -11,3 +11,11 @@ This proposal does not redistribute an image, SPK or compiled SDK. Before any
 distribution, complete the image/Web Vault dependency notice and Corresponding
 Source inventory; retaining one source tag alone is not a complete inventory.
 Development-only dependencies retain the licenses in their published packages.
+
+## Package icon attribution
+
+Official Vaultwarden artwork from dani-garcia/vaultwarden at `1.37.4`, `resources/vaultwarden-icon.svg`.
+Source: https://raw.githubusercontent.com/dani-garcia/vaultwarden/1.37.4/resources/vaultwarden-icon.svg
+Original SHA-256: `c58fe91554bda6e1be51bd0cf56ac84ab63f798d5173e41e71e1aa1de515c7ef`.
+License: AGPL-3.0-only. The original asset is preserved; only size conversion/rasterization is performed for DSM. Upstream names and trademarks remain with their respective owners; this community integration does not claim upstream endorsement.
+Artwork author: Mathijs van Veluw (as credited in the original SVG metadata).
