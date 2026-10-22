@@ -14,7 +14,7 @@ install:
 entry: admin-only
 capabilities: {}
 compose:
-  sdk: 0.22.0
+  sdk: 0.24.0
   files: [compose.yaml]
   startup_timeout_seconds: 600
   web: {service: vaultwarden, port: 29800, health: {path: /alive, status: 200}}
@@ -30,7 +30,7 @@ compose:
             DOMAIN: {setting: public_origin}
             SSO_CLIENT_SECRET: {oidc_client: vaultwarden}
 identity_gateway:
-  sdk: 0.22.0
+  sdk: 0.24.0
   mode: oidc
   access: dsm-admins
   upstream_access: public

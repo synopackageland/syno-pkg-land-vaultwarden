@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
-    "@synopackageland/cli": "0.22.0"
+    "@synopackageland/cli": "0.24.0",
+    "@synopackageland/templates": "0.24.0"
   }
 }
