@@ -1,7 +1,7 @@
 # Vaultwarden for DSM
 
 沿用未修改的官方 Vaultwarden 1.37.4 映像與 Web Vault，所有包裝在
-`synology/`。使用正式 CLI/templates、SDK/App 0.22.0、executor/v0.20.0；UI release set 固定 0.12.5。
+`synology/`。使用正式 CLI/templates、SDK/App 0.25.0、executor/v0.24.0；UI release set 固定 0.14.0。
 
 ## 登入與加密
 
@@ -60,7 +60,7 @@ Manager 的程序處理殘留 volume，套件不取得 root 或 Docker socket �
 
 ## 開發驗證
 
-在 Linux builder 使用正式 CLI/templates、SDK/App 0.22.0。正式產物不使用 source override 或 Go replace。
+在 Linux builder 使用正式 CLI/templates、SDK/App 0.25.0。正式產物不使用 source override 或 Go replace。
 
 ```sh
 cd synology
