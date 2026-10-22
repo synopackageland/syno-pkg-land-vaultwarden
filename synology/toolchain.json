@@ -1,8 +1,8 @@
 {
-  "cli": "0.24.0",
-  "templates": "0.24.0",
-  "sdk": "0.24.0",
-  "app": "0.24.0",
+  "cli": "0.25.0",
+  "templates": "0.25.0",
+  "sdk": "0.25.0",
+  "app": "0.25.0",
   "executor": "0.24.0",
   "ui_release_set": "0.14.0",
   "source_overrides": false,
