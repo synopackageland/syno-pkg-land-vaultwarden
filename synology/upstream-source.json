@@ -4,7 +4,7 @@
   "wrapper_base": "58a980f850464f7d9cdc99a765df36f0a3308b91",
   "tag_already_ancestor_of_base": true,
   "image": "vaultwarden/server:1.37.4@sha256:efb3cde962015fcc036b2ea625242248611943b27212ebf4392841fb30fad055",
-  "build": 3,
+  "build": 4,
   "source_modified_by_wrapper": false,
   "note": "The fork base contains later upstream commits. The official image revision matches the selected release tag; the wrapper does not build the fork HEAD."
 }

@@ -1,13 +1,13 @@
 {
   "package": "SynoPkgVaultwarden",
-  "version": "1.37.4-0003",
+  "version": "1.37.4-0004",
   "toolchain": {
-    "cli": "0.25.0",
-    "templates": "0.25.0",
-    "sdk": "0.25.0",
-    "app": "0.25.0",
+    "cli": "0.26.0",
+    "templates": "0.26.0",
+    "sdk": "0.26.0",
+    "app": "0.26.0",
     "executor": "0.24.0",
-    "ui_release_set": "0.14.0",
+    "ui_release_set": "0.14.4",
     "source_overrides": false,
     "status": "published-framework-pins",
     "executorTag": "executor/v0.24.0",
@@ -24,53 +24,68 @@
     "findings": []
   },
   "nas_tested": false,
-  "manifest_sha256": "803b6acff5f09861a04f14b1057c26c3d8076c8ad1aaaaba959e99f3a286e3f6",
+  "manifest_sha256": "0d876b708ca04a51d00fed34f4d4283b6a362b00b18a7dc44c1f955cd21b3422",
   "lock_sha256": {
-    "package-lock.json": "08cac40ce2fbc564a190befc2c7d1243663d87398ca361f4e13acd93afbefdfd",
-    "tests/gateway/go.sum": "7f2b5a1a96ed7d4452279af19a6a3e1c7ea2dcf69273f97daff2fd10765de0f1"
+    "package-lock.json": "4bf047713fecced1546be11493bf48a05bd2226aaeb97be0fd1ed4118a09b9b8",
+    "tests/gateway/go.sum": "b1c7e00393c51acdf6f013e77e9858752a3c01ced43153652a7d77fd33fb233d"
   },
   "outputs": [
     {
-      "file": "SynoPkgVaultwarden-1.37.4-0003-x86_64.spk",
-      "sha256": "c4e1808628cadebddeb5d4262a92ab5edfb22fe045873b41f20b281f576a1f2a",
-      "size": 21005312
+      "file": "SynoPkgVaultwarden-1.37.4-0004-x86_64.spk",
+      "sha256": "ce9f712f3f235a9322a5094aaeb58e08da66ad74c617f8da2c509082cf2c625f",
+      "size": 21105152,
+      "md5": "d0bdb70013da5c9976a1bc4e8d29412e"
     }
   ],
   "go_binaries": [
     {
-      "path": "compose/control",
-      "version": "go1.26.10",
-      "sha256": "96659fed7b40d7001f7e26b74111f568af063701a8e4a135559d19889763be90"
-    },
-    {
-      "path": "compose/storage-init",
-      "version": "go1.26.10",
-      "sha256": "56317f79c9785e9a8cd1e0679df6f2514ce240f9ac1a85307f9b5e13dcca0acf"
-    },
-    {
-      "path": "daemon/control",
-      "version": "go1.26.10",
-      "sha256": "d8de3c8a47af34d9516103c50ac065c699c4565bfa94ebdf4baf4cf7c6805b68"
-    },
-    {
-      "path": "daemon/payload/_sso/gateway",
-      "version": "go1.26.10",
-      "sha256": "9f707f77e2e9bdc44b397b1a64ffccd4dccb441af8813a20cfab8d7b48224be3"
-    },
-    {
+      "arch": "x86_64",
       "path": "install/control",
       "version": "go1.26.10",
-      "sha256": "cd3ff94ccbd526f2e22b931ea8ca4b72831d60e7b40cc32a90163e7b99f272c1"
+      "sha256": "cd3ff94ccbd526f2e22b931ea8ca4b72831d60e7b40cc32a90163e7b99f272c1",
+      "upstream_unmodified": false
     },
     {
-      "path": "ui/sso/authorize.cgi",
+      "arch": "x86_64",
+      "path": "compose/storage-init",
       "version": "go1.26.10",
-      "sha256": "9f707f77e2e9bdc44b397b1a64ffccd4dccb441af8813a20cfab8d7b48224be3"
+      "sha256": "56317f79c9785e9a8cd1e0679df6f2514ce240f9ac1a85307f9b5e13dcca0acf",
+      "upstream_unmodified": false
     },
     {
+      "arch": "x86_64",
+      "path": "compose/control",
+      "version": "go1.26.10",
+      "sha256": "055076054d8905eb3bf3ff300067882c2a8c619cb112855ff5f9b73bcf920e7a",
+      "upstream_unmodified": false
+    },
+    {
+      "arch": "x86_64",
+      "path": "daemon/control",
+      "version": "go1.26.10",
+      "sha256": "ac005f8e52938072850f824c61c57bc82ca5643eae4a2b01641ff082bc8df517",
+      "upstream_unmodified": false
+    },
+    {
+      "arch": "x86_64",
+      "path": "daemon/payload/_sso/gateway",
+      "version": "go1.26.10",
+      "sha256": "62bea9c7d4181d7457601b12d709c3cacf6d5947c59dfae5f343bb8dd5d51693",
+      "upstream_unmodified": false
+    },
+    {
+      "arch": "x86_64",
       "path": "ui/sso/open.cgi",
       "version": "go1.26.10",
-      "sha256": "9f707f77e2e9bdc44b397b1a64ffccd4dccb441af8813a20cfab8d7b48224be3"
+      "sha256": "62bea9c7d4181d7457601b12d709c3cacf6d5947c59dfae5f343bb8dd5d51693",
+      "upstream_unmodified": false
+    },
+    {
+      "arch": "x86_64",
+      "path": "ui/sso/authorize.cgi",
+      "version": "go1.26.10",
+      "sha256": "62bea9c7d4181d7457601b12d709c3cacf6d5947c59dfae5f343bb8dd5d51693",
+      "upstream_unmodified": false
     }
   ]
 }
