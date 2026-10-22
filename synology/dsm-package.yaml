@@ -4,7 +4,7 @@ version: 1.37.4
 build: 3
 displayname: Vaultwarden
 icon: assets/icon.png
-description: Vaultwarden Web Vault with native DSM OIDC; a master password still unlocks encryption.
+description: Store and manage passwords and secure notes in an encrypted vault
 maintainer: synopackageland
 os_min_ver: "7.2.1-69057"
 arches: [x86_64]
@@ -45,3 +45,7 @@ identity_gateway:
         redirect_paths: [/identity/connect/oidc-signin]
         pkce: true
 ui: {launch: new-page}
+i18n:
+  info:
+    zh-TW:
+      description: 在加密保險庫中儲存與管理密碼和安全筆記
