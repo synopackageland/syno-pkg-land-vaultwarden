@@ -1,7 +1,7 @@
 # Vaultwarden for DSM
 
 沿用未修改的官方 Vaultwarden 1.37.4 映像與 Web Vault，所有包裝在
-`synology/`。使用正式 CLI/templates、SDK/App 0.22.0、executor/v0.20.0；UI release set 固定 0.12.5。
+`synology/`。使用正式 CLI/templates、SDK/App 0.25.0、executor/v0.24.0；UI release set 固定 0.14.0。
 
 ## 登入與加密
 
@@ -60,7 +60,7 @@ Manager 的程序處理殘留 volume，套件不取得 root 或 Docker socket �
 
 ## 開發驗證
 
-在 Linux builder 使用正式 CLI/templates、SDK/App 0.22.0。正式產物不使用 source override 或 Go replace。
+在 Linux builder 使用正式 CLI/templates、SDK/App 0.25.0。正式產物不使用 source override 或 Go replace。
 
 ```sh
 cd synology
@@ -79,3 +79,7 @@ CLI 原生 build 會產生安裝欄位及 SDK 設定控制器，check／build／
 e2e suite 使用 repo 外的 DSM profiles／主密碼檔、私有 output 目錄；缺少 fixture
 不算通過。公開提交前以 `scripts/public-scan.py --denylist <private-file>` 掃描。
 驗收範圍及尚未證明的部分見 [validation](docs/validation.md)。
+
+## Official package icon
+
+The DSM package uses the official project artwork, preserved unchanged and only resized/rasterized to the required icon sizes. See [assets/icon-source.json](assets/icon-source.json) for the source revision and original SHA-256, and [NOTICE](NOTICE) for attribution and the applicable image license. The package ID remains `SynoPkgVaultwarden` for upgrade continuity.
