@@ -1,0 +1,11 @@
+{
+  "url": "https://raw.githubusercontent.com/dani-garcia/vaultwarden/1.37.4/resources/vaultwarden-icon.svg",
+  "repository": "dani-garcia/vaultwarden",
+  "revision": "1.37.4",
+  "path": "resources/vaultwarden-icon.svg",
+  "license": "AGPL-3.0-only",
+  "sha256": "c58fe91554bda6e1be51bd0cf56ac84ab63f798d5173e41e71e1aa1de515c7ef",
+  "rendering": "Official original preserved byte for byte; only uniform scaling/rasterization for DSM icon sizes. No crop, recolor, compositing or redraw.",
+  "input": "assets/icon-original.svg",
+  "manifest_icon": "assets/icon.png"
+}
