@@ -1,7 +1,7 @@
 # Validation record
 
-The current production candidate uses released CLI/templates/SDK/App 0.22.0,
-UI 0.12.5 and executor/v0.20.0, without source overrides or Go replace.
+The current production candidate uses released CLI/templates/SDK/App 0.25.0,
+UI 0.14.0 and executor/v0.24.0, without source overrides or Go replace.
 
 ## Historical development acceptance
 
@@ -102,3 +102,22 @@ Unlocking with that password displayed the saved encrypted login item.
 Delete-data uninstall displayed COMPOSE_DATA_RETAINED. After package and
 containers were absent, only the disposable acceptance volumes and upload
 were removed separately; DSM package identity was retained.
+
+## Released 0.25.0 security rebuild
+
+Vaultwarden 1.37.4-0003 uses published SDK/App/CLI/templates 0.25.0.
+CLI 0.25.0 retains the released executor/v0.24.0 mapping; no executor/v0.25.0
+tag is assumed. The UI release set remains 0.14.0.
+
+The Linux candidate passes check/build/inspect with findings=[] and all seven
+package-owned Go executable entries report go1.26.10. The former
+INSTALL_SETTINGS_INVALID and COMPOSE_ARTIFACT_INVALID findings from CLI 0.24.0
+are resolved by the published CLI, with both the native diagnostic prefix and
+installation settings hook retained. No generated scripts, published CLI files
+or SPK members were edited. npm lockfile integrity is checked against official
+registry metadata and downloaded tarballs. The official upstream image digest,
+package name and existing display names are unchanged.
+
+This is offline package verification only. No NAS tests, GitHub Release, catalog
+update or publication is included. See security-rebuild.json for the exact SPK
+SHA-256 and package-owned binary hashes.

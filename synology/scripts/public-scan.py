@@ -16,6 +16,7 @@ parts = ['t-' + r'0[0-9]{3}', 'redac' + 'ted', 'redac' + 'ted', 'redac' + 'ted',
          'redac' + 'ted', 'redac' + 'ted', 'redac' + 'ted', 'redac' + 'ted',
          'redac' + 'ted', 'redac' + 'ted', 'redac' + 'ted', 'redac' + 'ted',
          'redac' + 'ted', r'synology' + r'\.com', 'redac' + 'ted']
+# FORTIFY_SOURCE is a compiler hardening macro, not a private identifier.
 pattern = re.compile('|'.join(parts), re.I)
 deny = [line for line in args.denylist.read_bytes().splitlines() if line]
 failed = []

@@ -1,6 +1,6 @@
 # Framework and upstream boundaries
 
-- Published SDK/CLI 0.22.0 provides provider-only OIDC, the fixed fragment
+- Published SDK/CLI 0.25.0 provides provider-only OIDC, the fixed fragment
   launcher and native installation settings. Production builds use the released
   packages with executor/v0.20.0 and no source overrides.
 - Account deletion: upstream exposes `POST /admin/users/<id>/delete`, but it is
