@@ -6,7 +6,7 @@ const daemon = {targets: {}};
 function parse(overrides = {}) {
   const diagnostics = [];
   const value = readIdentityGateway({
-    sdk: '0.25.0', mode: 'oidc', upstream: 8080,
+    sdk: '0.26.0', mode: 'oidc', upstream: 8080,
     listen: {https: 29443},
     oidc: {issuer_port: 29090, native_login: true,
       clients: [{id: 'vaultwarden', redirect_paths: ['/identity/connect/oidc-signin'], pkce: true}]},
