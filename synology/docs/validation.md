@@ -1,7 +1,7 @@
 # Validation record
 
-The current production candidate uses released CLI/templates/SDK/App 0.25.0,
-UI 0.14.0 and executor/v0.24.0, without source overrides or Go replace.
+The current production candidate uses released CLI/templates/SDK/App 0.28.0,
+UI 0.14.4 and executor/v0.27.0, without source overrides or Go replace.
 
 ## Historical development acceptance
 
@@ -121,3 +121,23 @@ package name and existing display names are unchanged.
 This is offline package verification only. No NAS tests, GitHub Release, catalog
 update or publication is included. See security-rebuild.json for the exact SPK
 SHA-256 and package-owned binary hashes.
+
+## Released 0.28.0 rebuild (1.37.4-0005)
+
+Vaultwarden 1.37.4-0005 uses published SDK/App/CLI/templates 0.28.0 with the
+released executor/v0.27.0 mapping, UI 0.14.4 and go1.26.10, without source
+overrides or Go replace. It picks up the SDK slow-NAS startup defaults
+(generous health/readiness timing, Starting status in the UI, `/_spl/ping`
+gateway liveness) and CLI 0.28.0's default 900s Compose startup budget.
+
+Run on macOS (darwin/arm64) from `synology/` with `npm ci --ignore-scripts`:
+`npm test` (6 pass), `npm run test:sdk` and `npm run test:requirements`
+(gateway Go tests against SDK v0.28.0, all pass), `npx synopkgland check --json`
+(ok), `npx synopkgland build --arch x86_64 --json` (ok, produced
+SynoPkgVaultwarden-1.37.4-0005-x86_64.spk) and `npx synopkgland inspect`
+(ok, findings=[]). The seven package-owned Go executable entries report
+go1.26.10. The build was made on macOS rather than a Linux builder; the exact
+SPK and binary hashes are in security-rebuild.json.
+
+This is offline package verification only. No NAS tests, e2e suite, GitHub
+Release, catalog update or publication is included.
