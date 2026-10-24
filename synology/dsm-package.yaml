@@ -1,7 +1,7 @@
 schema: 2
 package: SynoPkgVaultwarden
 version: 1.37.4
-build: 5
+build: 6
 displayname: Vaultwarden
 icon: assets/icon.png
 description: Store and manage passwords and secure notes in an encrypted vault
@@ -14,7 +14,7 @@ install:
 entry: admin-only
 capabilities: {}
 compose:
-  sdk: 0.28.0
+  sdk: 0.29.2
   files: [compose.yaml]
   web: {service: vaultwarden, port: 29800, health: {path: /alive, status: 200}}
   network: {egress: internet}
@@ -26,10 +26,11 @@ compose:
         directories: [{base: /var/tmp, path: vaultwarden}]
         runtime:
           environment:
-            DOMAIN: {setting: public_origin}
+            DOMAIN: {external_origin: true, setting: public_origin}
             SSO_CLIENT_SECRET: {oidc_client: vaultwarden}
 identity_gateway:
-  sdk: 0.28.0
+  sdk: 0.29.2
+  external_access: {connect: optional, origin_change: confirm, single_origin: true}
   mode: oidc
   access: dsm-admins
   upstream_access: public

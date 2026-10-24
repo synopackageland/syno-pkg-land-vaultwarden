@@ -1,13 +1,13 @@
 # Vaultwarden for DSM
 
-## SDK 0.28.0 rebuild
+## One sign-in URL (1.37.4-0006)
 
-Rebuild 1.37.4-0005 with published SDK/App/CLI/templates 0.28.0 (executor/v0.27.0), UI 0.14.4 and Go 1.26.10, using the SDK's slow-NAS startup defaults (generous health/readiness timing, Starting status in the UI, `/_spl/ping` gateway liveness). Maintainer: Syno Package Land. Official images and application sources are unchanged. Not tested on a NAS.
+Vaultwarden keeps exactly one URL. Without an external address it uses the install-time URL as before. When an administrator sets an external address in the App's external access settings, that address becomes the only sign-in URL: opening the App from DSM goes there, browser visits to the local address are redirected there, and the confirmation states that only this address can sign in afterwards. A Tailscale `*.ts.net` address is reachable only from devices on the tailnet. Requires SDK/App/CLI/templates 0.29.2 with `single_origin`. Official images and application sources are unchanged. Not tested on a NAS.
 
-1.37.4-0005 使用已發佈 SDK/App/CLI/templates 0.28.0（executor/v0.27.0）、UI 0.14.4 與 Go 1.26.10 重建，並採用 SDK 的慢速 NAS 啟動預設值（較寬鬆的健康/就緒時限、UI 顯示「啟動中」、`/_spl/ping` 閘道存活檢查）；維護者顯示為 Syno Package Land。 官方映像與上游程式維持原樣。尚未在 NAS 上測試。
+1.37.4-0006 起 Vaultwarden 只保留一個網址。未設定外網網址時沿用安裝時網址；管理員在 App 的外網存取設定填入網址後，該網址成為唯一登入網址：從 DSM 開啟會前往該網址，瀏覽器開啟內網位址會轉到該網址，確認文字說明之後只能用此網址登入。Tailscale `*.ts.net` 網址只有 tailnet 中的裝置能連線。需要含 `single_origin` 的 SDK/App/CLI/templates 0.29.2；官方映像與上游程式維持原樣。尚未在 NAS 上測試。
 
 沿用未修改的官方 Vaultwarden 1.37.4 映像與 Web Vault，所有包裝在
-`synology/`。使用正式 CLI/templates、SDK/App 0.28.0、executor/v0.27.0；UI release set 固定 0.14.4。
+`synology/`。使用正式 CLI/templates、SDK/App 0.29.2、executor/v0.27.0；UI release set 固定 0.14.4。
 
 ## 登入與加密
 
@@ -43,9 +43,22 @@ Vaultwarden 的管理 token。
    Vaultwarden `DOMAIN`。值會保留供升級使用；不是 SPK 內的固定示例網址。
 5. 從 DSM 主選單開啟 Vaultwarden，依上游流程建主密碼或解鎖。
 
-App URL 與 DOMAIN 必須一致，包括 port。請透過相同主機名稱開啟 DSM menu；
-從另一個 NAS alias/IP 開啟可能使 OIDC callback origin 不一致。不要自動猜測
-對外域名。不同 hostname 的專用反向代理、子路徑與隨意 port 重寫未驗收。
+App URL 與 DOMAIN 必須一致，包括 port。未設定外網網址時，請透過相同主機名稱
+開啟 DSM menu；從另一個 NAS alias/IP 開啟可能使 OIDC callback origin 不一致。
+不要自動猜測對外域名。
+
+### 外網網址（唯一登入網址）
+
+上游 SSO callback、CORS、WebAuthn 與郵件連結都由單一 `DOMAIN` 衍生，SSO 也綁定
+只屬於該主機的 cookie，因此只能在 `DOMAIN` 主機登入。從內網開啟 DSM 後，到
+`/webman/3rdparty/SynoPkgVaultwarden/sso/settings.cgi` 設定外網網址（或由
+Connect 提供）。重新啟動 App 後 `DOMAIN` 改為該網址，它成為唯一登入網址：
+
+- 從 DSM 主選單開啟會直接前往該網址。
+- 瀏覽器開啟內網 `:29443` 位址時會轉到該網址；原生用戶端 API 不轉址。
+- 變更網址需勾選確認：之後只能用此網址登入；Tailscale 網址另提示只有 tailnet
+  中的裝置能連線。內網裝置也必須能連到這個網址。
+- 清除外網網址並重新啟動後，`DOMAIN` 回到安裝時網址。不同 hostname 的專用反向代理、子路徑與隨意 port 重寫未驗收。
 需要反向代理時，管理員須保留 Host、HTTPS 訊號、原生 API、OIDC callback 及
 `/notifications/hub` WebSocket upgrade，並重新驗證完整登入。
 
@@ -66,7 +79,7 @@ Manager 的程序處理殘留 volume，套件不取得 root 或 Docker socket �
 
 ## 開發驗證
 
-在 Linux builder 使用正式 CLI/templates、SDK/App 0.28.0。正式產物不使用 source override 或 Go replace。
+在 Linux builder 使用正式 CLI/templates、SDK/App 0.29.2。正式產物不使用 source override 或 Go replace。
 
 ```sh
 cd synology
@@ -78,8 +91,9 @@ npm run build
 ```
 
 CLI 原生 build 會產生安裝欄位及 SDK 設定控制器，check／build／inspect 會列出
-宣告但不列出私有值。App 只宣告 `install.settings.public_origin` 及
-`DOMAIN: {setting: public_origin}`，不提供安裝設定 shell hooks 或重寫 SPK。
+宣告但不列出私有值。App 只宣告 `install.settings.public_origin`、
+`DOMAIN: {external_origin: true, setting: public_origin}` 與
+`identity_gateway.external_access.single_origin: true`，不提供安裝設定 shell hooks 或重寫 SPK。
 安裝時空白沿用已保留設定；首次安裝缺值會拒絕，升級／重裝由 SDK 保留。
 
 e2e suite 使用 repo 外的 DSM profiles／主密碼檔、私有 output 目錄；缺少 fixture
