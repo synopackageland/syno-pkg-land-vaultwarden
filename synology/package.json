@@ -1,6 +1,6 @@
 {
   "name": "syno-pkg-land-vaultwarden",
-  "version": "1.37.4-0003",
+  "version": "1.37.4-0005",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
-    "@synopackageland/cli": "0.26.0",
-    "@synopackageland/templates": "0.26.0"
+    "@synopackageland/cli": "0.28.0",
+    "@synopackageland/templates": "0.28.0"
   }
 }
