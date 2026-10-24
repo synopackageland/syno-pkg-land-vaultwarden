@@ -1,13 +1,13 @@
 # Vaultwarden for DSM
 
-## SDK 0.26.0 rebuild
+## SDK 0.28.0 rebuild
 
-Rebuild 1.37.4-0004 with published SDK/App/CLI/templates 0.26.0, UI 0.14.4 and Go 1.26.10. Maintainer: Syno Package Land. Official images and application sources are unchanged.
+Rebuild 1.37.4-0005 with published SDK/App/CLI/templates 0.28.0 (executor/v0.27.0), UI 0.14.4 and Go 1.26.10, using the SDK's slow-NAS startup defaults (generous health/readiness timing, Starting status in the UI, `/_spl/ping` gateway liveness). Maintainer: Syno Package Land. Official images and application sources are unchanged. Not tested on a NAS.
 
-1.37.4-0004 使用已發佈 SDK/App/CLI/templates 0.26.0、UI 0.14.4 與 Go 1.26.10 重建；維護者顯示為 Syno Package Land。 官方映像與上游程式維持原樣。
+1.37.4-0005 使用已發佈 SDK/App/CLI/templates 0.28.0（executor/v0.27.0）、UI 0.14.4 與 Go 1.26.10 重建，並採用 SDK 的慢速 NAS 啟動預設值（較寬鬆的健康/就緒時限、UI 顯示「啟動中」、`/_spl/ping` 閘道存活檢查）；維護者顯示為 Syno Package Land。 官方映像與上游程式維持原樣。尚未在 NAS 上測試。
 
 沿用未修改的官方 Vaultwarden 1.37.4 映像與 Web Vault，所有包裝在
-`synology/`。使用正式 CLI/templates、SDK/App 0.26.0、executor/v0.24.0；UI release set 固定 0.14.4。
+`synology/`。使用正式 CLI/templates、SDK/App 0.28.0、executor/v0.27.0；UI release set 固定 0.14.4。
 
 ## 登入與加密
 
@@ -66,7 +66,7 @@ Manager 的程序處理殘留 volume，套件不取得 root 或 Docker socket �
 
 ## 開發驗證
 
-在 Linux builder 使用正式 CLI/templates、SDK/App 0.26.0。正式產物不使用 source override 或 Go replace。
+在 Linux builder 使用正式 CLI/templates、SDK/App 0.28.0。正式產物不使用 source override 或 Go replace。
 
 ```sh
 cd synology
