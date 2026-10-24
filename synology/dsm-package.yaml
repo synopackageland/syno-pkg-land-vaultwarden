@@ -16,7 +16,6 @@ capabilities: {}
 compose:
   sdk: 0.26.0
   files: [compose.yaml]
-  startup_timeout_seconds: 600
   web: {service: vaultwarden, port: 29800, health: {path: /alive, status: 200}}
   network: {egress: internet}
   services:
