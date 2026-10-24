@@ -1,13 +1,13 @@
 # Vaultwarden for DSM
 
-## One sign-in URL (1.37.4-0006)
+## 1.37.4-0007
 
-Vaultwarden keeps exactly one URL. Without an external address it uses the install-time URL as before. When an administrator sets an external address in the App's external access settings, that address becomes the only sign-in URL: opening the App from DSM goes there, browser visits to the local address are redirected there, and the confirmation states that only this address can sign in afterwards. A Tailscale `*.ts.net` address is reachable only from devices on the tailnet. Requires SDK/App/CLI/templates 0.29.2 with `single_origin`. Official images and application sources are unchanged. Not tested on a NAS.
+Vaultwarden now has one sign-in URL, and opening it from DSM goes to that address. Without an external address, it uses the install-time URL.
 
-1.37.4-0006 起 Vaultwarden 只保留一個網址。未設定外網網址時沿用安裝時網址；管理員在 App 的外網存取設定填入網址後，該網址成為唯一登入網址：從 DSM 開啟會前往該網址，瀏覽器開啟內網位址會轉到該網址，確認文字說明之後只能用此網址登入。Tailscale `*.ts.net` 網址只有 tailnet 中的裝置能連線。需要含 `single_origin` 的 SDK/App/CLI/templates 0.29.2；官方映像與上游程式維持原樣。尚未在 NAS 上測試。
+Vaultwarden 現在只保留一個登入網址，從 DSM 開啟也會前往該網址；未設定外網網址時沿用安裝時網址
 
 沿用未修改的官方 Vaultwarden 1.37.4 映像與 Web Vault，所有包裝在
-`synology/`。使用正式 CLI/templates、SDK/App 0.29.2、executor/v0.27.0；UI release set 固定 0.14.4。
+`synology/`。使用正式 CLI/templates 0.30.0、SDK/App 0.30.2、executor/v0.27.0；UI release set 固定 0.14.4。
 
 ## 登入與加密
 
@@ -79,7 +79,7 @@ Manager 的程序處理殘留 volume，套件不取得 root 或 Docker socket �
 
 ## 開發驗證
 
-在 Linux builder 使用正式 CLI/templates、SDK/App 0.29.2。正式產物不使用 source override 或 Go replace。
+在 Linux builder 使用正式 CLI/templates 0.30.0、SDK/App 0.30.2。正式產物不使用 source override 或 Go replace。
 
 ```sh
 cd synology
