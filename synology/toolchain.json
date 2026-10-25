@@ -1,12 +1,12 @@
 {
-  "cli": "0.30.0",
-  "templates": "0.30.0",
-  "sdk": "0.30.2",
-  "app": "0.30.2",
-  "executor": "0.27.0",
+  "cli": "0.31.0",
+  "templates": "0.31.0",
+  "sdk": "0.31.0",
+  "app": "0.31.0",
+  "executor": "0.31.0",
   "ui_release_set": "0.14.4",
   "source_overrides": false,
   "status": "published-framework-pins",
-  "executorTag": "executor/v0.27.0",
+  "executorTag": "executor/v0.31.0",
   "goToolchain": "go1.26.10"
 }
