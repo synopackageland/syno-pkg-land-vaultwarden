@@ -5,7 +5,11 @@ build: 9
 displayname: Vaultwarden
 icon: assets/icon.png
 description: Store and manage passwords and secure notes in an encrypted vault
-maintainer: Syno Package Land
+maintainer: Daniel García
+metadata:
+  maintainer_url: https://github.com/dani-garcia/vaultwarden
+  distributor: Syno Package Land
+  distributor_url: https://synopkgland.com/
 os_min_ver: "7.2.1-69057"
 arches: [x86_64]
 install:
