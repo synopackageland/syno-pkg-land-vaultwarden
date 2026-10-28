@@ -1,5 +1,13 @@
 # Vaultwarden for DSM
 
+
+## 1.37.4-0010: SDK entry-gate migration
+
+Built with SDK/App/templates 0.32.0, CLI 0.34.0 and executor v0.32.0.
+Only `/api`, `/identity`, `/notifications`, `/attachments`, `/events`, `/icons` use upstream authentication; all other browser paths retain the DSM entry gate.
+Protected executor payloads changed: administrator approval is required again after upgrading.
+No NAS installation or device acceptance was performed for this rebuild.
+
 ## 1.37.4-0007
 
 Vaultwarden now has one sign-in URL, and opening it from DSM goes to that address. Without an external address, it uses the install-time URL.
@@ -12,8 +20,9 @@ Vaultwarden 現在只保留一個登入網址，從 DSM 開啟也會前往該網
 ## 登入與加密
 
 DSM 主選單透過固定原生 `/#/sso?identifier=00000000-01DC-01DC-01DC-000000000000`
-入口開始 PKCE。issuer 要求 DSM 管理員與既有 DSM App 權限語意；上游 API、
-原生用戶端、WebSocket 由 Vaultwarden 自己驗證，不在前面加 DSM gate。
+入口開始 PKCE。issuer 與瀏覽器頁面要求 DSM 管理員與既有 DSM App 權限語意；
+只有 `/api`、`/identity`、`/notifications`、`/attachments`、`/events`、`/icons`
+交由 Vaultwarden 自己驗證，供原生用戶端、API 與 WebSocket 使用。
 目前 entry/access 均以管理員為限，不宣稱一般使用者驗收完成。
 
 **第一次仍須建主密碼，之後仍須主密碼解鎖保險庫。** DSM SSO 不能解密、代填
