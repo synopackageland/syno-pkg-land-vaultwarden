@@ -4,7 +4,7 @@ go 1.25.0
 
 toolchain go1.26.10
 
-require github.com/synopackageland/syno-pkg-land-sdk v0.30.2
+require github.com/synopackageland/syno-pkg-land-sdk v0.32.0
 
 require (
 	golang.org/x/sys v0.44.0 // indirect

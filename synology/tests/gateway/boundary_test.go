@@ -12,6 +12,14 @@ import (
 )
 
 func front(t *testing.T, access string, passthrough []string, providerOnly ...bool) (http.Handler, *int, error) {
+	upstreamAccess := ""
+	if len(providerOnly) > 0 && providerOnly[0] {
+		upstreamAccess = "public"
+	}
+	return frontWithPolicy(t, access, passthrough, upstreamAccess, "", nil)
+}
+
+func frontWithPolicy(t *testing.T, access string, passthrough []string, upstreamAccess, entry string, upstreamAuthPaths []string) (http.Handler, *int, error) {
 	t.Helper()
 	calls := new(int)
 	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -28,16 +36,35 @@ func front(t *testing.T, access string, passthrough []string, providerOnly ...bo
 	if err != nil {
 		t.Fatal(err)
 	}
-	upstreamAccess := ""
-	if len(providerOnly)>0 && providerOnly[0] {upstreamAccess="public"}
 	f, err := gateway.NewFront(gateway.FrontConfig{
 		Package: "SynoPkgVaultwarden", Upstream: upstream.URL,
 		Key: []byte(strings.Repeat("fixture-", 8)), Mode: gateway.ModeOIDC,
 		Access: access, UpstreamAccess: upstreamAccess, Passthrough: passthrough, Provider: provider,
+		Entry: entry, UpstreamAuthPaths: upstreamAuthPaths,
 		Issuer: "http://127.0.0.1:29090", AuthorizeCGI: "/webman/3rdparty/SynoPkgVaultwarden/sso/authorize.cgi",
 		DSMPorts: gateway.DSMPorts{HTTP: 5000, HTTPS: 5001},
 	})
 	return f, calls, err
+}
+
+func TestAdminEntryOpensOnlyDeclaredNativePaths(t *testing.T) {
+	paths := []string{"/api", "/identity", "/notifications", "/attachments", "/events", "/icons"}
+	f, calls, err := frontWithPolicy(t, "dsm-admins", nil, "", "admin-only", paths)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range paths {
+		if got := request(f, "POST", path+"/fixture", ""); got != http.StatusTeapot {
+			t.Errorf("native path %s: got %d", path, got)
+		}
+	}
+	before := *calls
+	for _, path := range []string{"/", "/apiary", "/API/config", "/admin", "/_sso/logout", "/_spl/ping"} {
+		request(f, "GET", path, "")
+	}
+	if *calls != before {
+		t.Fatal("browser, reserved or nonmatching paths reached upstream")
+	}
 }
 
 func request(handler http.Handler, method, path, origin string) int {
