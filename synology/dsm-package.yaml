@@ -1,7 +1,7 @@
 schema: 2
 package: SynoPkgVaultwarden
 version: 1.37.4
-build: 10
+build: 11
 displayname: Vaultwarden
 icon: assets/icon.png
 description: Store and manage passwords and secure notes in an encrypted vault
@@ -13,12 +13,13 @@ metadata:
 os_min_ver: "7.2.1-69057"
 arches: [x86_64]
 install:
+  ports: true
   settings:
-    public_origin: {type: https-origin, label: Public HTTPS origin (include port 29443), required: true}
+    public_origin: {type: https-origin, label: Public HTTPS origin (include the gateway HTTPS port), required: true}
 entry: admin-only
 capabilities: {}
 compose:
-  sdk: 0.32.0
+  sdk: 0.38.2
   files: [compose.yaml]
   web: {service: vaultwarden, port: 29800, health: {path: /alive, status: 200}}
   network: {egress: internet}
@@ -32,9 +33,16 @@ compose:
           environment:
             DOMAIN: {external_origin: true, setting: public_origin}
             SSO_CLIENT_SECRET: {oidc_client: vaultwarden}
+            SSO_ISSUER_PORT: {port: oidc_issuer}
+          # Vaultwarden's ENV_FILE expands ${SSO_ISSUER_PORT} from the process environment.
+          files:
+            - target: /var/tmp/vaultwarden/sso.env
+              content: "SSO_AUTHORITY=http://127.0.0.1:${SSO_ISSUER_PORT}\n"
 identity_gateway:
-  upstream_auth_paths: [/api, /identity, /notifications, /attachments, /events, /icons]
-  sdk: 0.32.0
+  # Native clients use these without DSM cookies. Browser-only /identity/connect/authorize and
+  # /identity/connect/oidc-signin keep the DSM gate, which rewrites the loopback issuer redirect.
+  upstream_auth_paths: [/api, /identity/connect/token, /identity/accounts, /identity/sso, /notifications, /attachments, /events, /icons]
+  sdk: 0.38.2
   external_access: {connect: optional, origin_change: confirm, single_origin: true}
   mode: oidc
   access: dsm-admins
