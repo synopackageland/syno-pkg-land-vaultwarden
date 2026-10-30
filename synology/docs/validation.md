@@ -1,7 +1,20 @@
 # Validation record
 
-The current production candidate uses released CLI/templates/SDK/App 0.28.0,
-UI 0.14.4 and executor/v0.27.0, without source overrides or Go replace.
+The current production candidate (1.37.4-0011) uses released CLI 0.41.9,
+templates 0.35.5, SDK/App 0.38.2 and executor/v0.38.2, without source overrides
+or Go replace.
+
+## 1.37.4-0011 device acceptance
+
+On a DSM 7.3.2 test NAS with Container Manager, 1.37.4-0011 upgraded in place
+from 1.37.4-0009 and reached `running`. `npm run e2e:smoke` passed A
+(administrator reaches the master-password form after DSM OIDC), N (a real
+non-administrator sees the SDK access-denied page) and X (signed out stays at
+the DSM gate). Without DSM cookies, `/identity/connect/token` still returns
+Vaultwarden's own `SSO sign-in is required` and `/identity/accounts/prelogin`
+returns 200; `/identity/connect/authorize` returns 401 at the DSM gate.
+A first install with default ports on a second DSM 7.3.2 NAS ended `broken`
+(`install_corruption`) and was removed; its cause was not determined.
 
 ## Historical development acceptance
 

@@ -48,7 +48,7 @@ func frontWithPolicy(t *testing.T, access string, passthrough []string, upstream
 }
 
 func TestAdminEntryOpensOnlyDeclaredNativePaths(t *testing.T) {
-	paths := []string{"/api", "/identity", "/notifications", "/attachments", "/events", "/icons"}
+	paths := []string{"/api", "/identity/connect/token", "/identity/accounts", "/identity/sso", "/notifications", "/attachments", "/events", "/icons"}
 	f, calls, err := frontWithPolicy(t, "dsm-admins", nil, "", "admin-only", paths)
 	if err != nil {
 		t.Fatal(err)
@@ -59,7 +59,8 @@ func TestAdminEntryOpensOnlyDeclaredNativePaths(t *testing.T) {
 		}
 	}
 	before := *calls
-	for _, path := range []string{"/", "/apiary", "/API/config", "/admin", "/_sso/logout", "/_spl/ping"} {
+	// Browser OIDC paths stay gated so the gateway rewrites the loopback issuer redirect.
+	for _, path := range []string{"/", "/apiary", "/API/config", "/admin", "/_sso/logout", "/_spl/ping", "/identity/connect/authorize", "/identity/connect/oidc-signin"} {
 		request(f, "GET", path, "")
 	}
 	if *calls != before {

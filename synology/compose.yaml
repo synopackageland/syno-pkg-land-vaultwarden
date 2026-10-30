@@ -17,7 +17,7 @@ services:
       SSO_SIGNUPS_ALLOWED: "true"
       SSO_SIGNUPS_MATCH_EMAIL: "false"
       SSO_ALLOW_UNKNOWN_EMAIL_VERIFICATION: "false"
-      SSO_AUTHORITY: http://127.0.0.1:29090
+      ENV_FILE: /var/tmp/vaultwarden/sso.env
       SSO_CLIENT_ID: vaultwarden
       SSO_SCOPES: email profile
       SSO_PKCE: "true"

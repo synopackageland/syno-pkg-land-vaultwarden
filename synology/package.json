@@ -1,6 +1,6 @@
 {
   "name": "syno-pkg-land-vaultwarden",
-  "version": "1.37.4-0010",
+  "version": "1.37.4-0011",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -11,11 +11,16 @@
     "test:e2e": "playwright test --config playwright.config.ts",
     "scan:public": "python3 scripts/public-scan.py",
     "check": "synopkgland check --json",
-    "build": "synopkgland build --arch x86_64 --json"
+    "build": "synopkgland build --arch x86_64 --json",
+    "e2e:smoke": "node --env-file-if-exists=.env node_modules/e2e/dist/cli/bin.js run tests/e2e/smoke.e2e.ts"
   },
   "devDependencies": {
+    "@ai-sdk/openai": "4.0.91",
+    "@e2e-dev/web": "0.14.0",
     "@playwright/test": "1.63.0",
-    "@synopackageland/cli": "0.34.0",
-    "@synopackageland/templates": "0.32.0"
+    "@synopackageland/cli": "0.41.9",
+    "@synopackageland/templates": "0.35.5",
+    "ai": "7.0.137",
+    "e2e": "0.19.0"
   }
 }
