@@ -14,7 +14,21 @@ the DSM gate). Without DSM cookies, `/identity/connect/token` still returns
 Vaultwarden's own `SSO sign-in is required` and `/identity/accounts/prelogin`
 returns 200; `/identity/connect/authorize` returns 401 at the DSM gate.
 A first install with default ports on a second DSM 7.3.2 NAS ended `broken`
-(`install_corruption`) and was removed; its cause was not determined.
+(`install_corruption`) and was removed. DSM's package manager log shows
+`failed to acquire postinst worker` / `fail compose up` after preinst and
+postinst both returned 0: the pinned image was not cached on that NAS, and
+dockerd's pull failed TLS verification against `registry-1.docker.io` because
+a TLS-inspecting firewall on that network presents its own certificate. The
+in-place upgrade passed only because the image was already cached there.
+
+A fresh install on a DSM 7.4.1 NAS reproduced the same `install_corruption`
+when the pull through the configured registry mirror stalled (no bytes for
+over ten minutes). DSM waited without a timeout. Once the image was pulled,
+a fresh install of the same SPK with the wizard defaults (HTTPS 29443, sign-in
+29090) reached `running` in about one minute; both port values were written
+and listening, and `npm run e2e:smoke` passed A, N and X. The manifest and
+`install.ports` values are not the cause; a fresh install needs a working
+image pull (see the registry note below).
 
 ## Historical development acceptance
 
