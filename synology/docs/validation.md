@@ -1,8 +1,46 @@
 # Validation record
 
-The current production candidate (1.37.4-0011) uses released CLI 0.41.9,
-templates 0.35.5, SDK/App 0.38.2 and executor/v0.38.2, without source overrides
-or Go replace.
+The current candidate is 1.37.4-0012, built on Linux with released CLI 0.42.2,
+templates 0.37.0 and SDK/App 0.42.0. The SDK release manifest maps to
+executor/v0.39.0; no source override or Go replace is used.
+
+## 1.37.4-0012 rebuild and in-place upgrade
+
+The upstream Vaultwarden version (1.37.4) and image digest are unchanged.
+The catalog and latest repository release tag remain at build 0009, while
+main already contains build 0011; this candidate increments main to 0012.
+There is no direct npm SDK/App/UI dependency to update.
+
+- `synopkgland check --json`: passed, no warnings.
+- `synopkgland build --arch x86_64 --json`: passed. This is the only architecture
+  family declared by the manifest; no unsupported family was added.
+- `synopkgland inspect`: passed, `findings=[]`.
+- Existing Node wrapper tests: 9 passed. Gateway Go tests: 5 passed; with the
+  requirements build tag: 7 passed. Full gates and the full E2E suite were not run.
+- All 125 resolved npm lockfile URLs use `https://registry.npmjs.org/`.
+  Wrapper and decoded SPK privacy scans, including local paths and tokens,
+  passed. Eight package-owned Go binaries report go1.26.10 and trimpath builds.
+- On one DSM 7.3.2 x86_64 NAS with the package already running, a single in-place
+  upgrade from 0011 to 0012 completed and DSM readback reported `running`.
+  No uninstall or application-data deletion was performed.
+- Seven retained setting/key files kept their content hashes and permissions.
+  The image, mounted persistent volumes, database inode and existing row
+  identifiers/counts were preserved. This does not claim a new vault-item
+  creation or decryption test.
+- An authenticated administrator reached the DSM desktop and launched
+  `SYNO.SDS.SynoPkgVaultwarden.Instance`; the native Web Vault master-password
+  form became visible after OIDC. No master password was entered.
+
+The fixed `/synopkgland/<package>/` rule is for `daemon.ingress`. This package
+uses `identity_gateway`, whose released CLI still generates
+`/webman/3rdparty/SynoPkgVaultwarden/sso/open.cgi` for the DSM menu and a
+separate HTTPS gateway origin. Check requests no manifest migration, and
+`/synopkgland/SynoPkgVaultwarden/` returns 404. The administrator menu flow is
+verified; acceptance at that fixed path remains unsupported by this package's
+current gateway model. No proxy or upstream application workaround was added.
+
+The exact candidate SPK and binary hashes are in `../security-rebuild.json`.
+No tag, GitHub release or catalog change is part of this PR.
 
 ## 1.37.4-0011 device acceptance
 

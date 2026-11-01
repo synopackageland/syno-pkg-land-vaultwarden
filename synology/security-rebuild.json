@@ -1,16 +1,16 @@
 {
   "package": "SynoPkgVaultwarden",
-  "version": "1.37.4-0007",
+  "version": "1.37.4-0012",
   "toolchain": {
-    "cli": "0.30.0",
-    "templates": "0.30.0",
-    "sdk": "0.30.2",
-    "app": "0.30.2",
-    "executor": "0.27.0",
-    "ui_release_set": "0.14.4",
+    "cli": "0.42.2",
+    "templates": "0.37.0",
+    "sdk": "0.42.0",
+    "app": "0.42.0",
+    "executor": "0.39.0",
+    "ui_release_set": null,
     "source_overrides": false,
     "status": "published-framework-pins",
-    "executorTag": "executor/v0.27.0",
+    "executorTag": "executor/v0.39.0",
     "goToolchain": "go1.26.10"
   },
   "check": {
@@ -23,18 +23,18 @@
     "ok": true,
     "findings": []
   },
-  "nas_tested": false,
-  "embedded_compose_sdk": "0.30.2",
-  "manifest_sha256": "42a723f8fb87c7f86f6f477e432884cb974474741499b2f45713216d0e455efc",
+  "nas_tested": true,
+  "embedded_compose_sdk": "0.42.0",
+  "manifest_sha256": "7180ddd65319359c14497c69b686469b71cf3a5c061efd9aa7b54587d79de9db",
   "lock_sha256": {
-    "package-lock.json": "00c44ddc88a939b9f73ea11f837164b369645df02c6564cee0467121ed91a92b"
+    "package-lock.json": "9f115b75204c4ff36e93a9ff2486f193a14246dffe0eb5f53167e270893e1ca2"
   },
   "outputs": [
     {
-      "file": "SynoPkgVaultwarden-1.37.4-0007-x86_64.spk",
-      "sha256": "8abd3e9d095d675a9ade4bf04d5e7449a55530b854b5cadc2c9815aedccfb168",
-      "size": 27747840,
-      "md5": "dd60a02a450a3eadeae1103b47371c5a"
+      "file": "SynoPkgVaultwarden-1.37.4-0012-x86_64.spk",
+      "sha256": "196ccde14d67efeac1bb111babda5184c62017b28ef8de6321d7adfc56eda8f7",
+      "size": 28291072,
+      "md5": "73acbc7c043d2b4ed6e33e3fb20873df"
     }
   ],
   "go_binaries": [
@@ -42,57 +42,82 @@
       "arch": "x86_64",
       "path": "compose/control",
       "version": "go1.26.10",
-      "sha256": "5bea4711d0564c97e8a669077112c122e1f9c7c27d109e8cb0feb67d81abd70a",
+      "sha256": "f6be3571c50293b286d82431db71e08598f3d08551879f29b1b63ea1d5283b16",
       "upstream_unmodified": false
     },
     {
       "arch": "x86_64",
       "path": "compose/storage-init",
       "version": "go1.26.10",
-      "sha256": "a8611d079df326de4e8a9f7574d6d1c78f087afd49e37f899f811d7a0c5c570c",
+      "sha256": "fba2fd79c7551d07615869c23ca1076180b0b723f15f3f856fa75b750657e86e",
       "upstream_unmodified": false
     },
     {
       "arch": "x86_64",
       "path": "daemon/control",
       "version": "go1.26.10",
-      "sha256": "4bed54373273fd30d2aaf3a643960c35a45c577283ed133fa97fc842c5e1dc9e",
+      "sha256": "a4c8aa677795ff93641efecb7b0699d02c17c06ff9bfbec4943d8fe136a3b753",
       "upstream_unmodified": false
     },
     {
       "arch": "x86_64",
       "path": "daemon/payload/_sso/gateway",
       "version": "go1.26.10",
-      "sha256": "1b165cbab6a39b9548a6ecc838f7a32416d27aaad3a47678155e7b0a37949cd5",
+      "sha256": "cab2182da7b599b02cc2f22ca91f59bca9b1fa6e4ac558044da2c2f12cb05695",
       "upstream_unmodified": false
     },
     {
       "arch": "x86_64",
       "path": "install/control",
       "version": "go1.26.10",
-      "sha256": "18255ae5d46d3b82a45ca1e2a2ea02f578631df79a3c88c69bca1677e6467a10",
+      "sha256": "213dd6c7fb303e45cf771f1935d64b0e9d3518fa5d00709296764bd695a707f4",
       "upstream_unmodified": false
     },
     {
       "arch": "x86_64",
       "path": "ui/sso/authorize.cgi",
       "version": "go1.26.10",
-      "sha256": "1b165cbab6a39b9548a6ecc838f7a32416d27aaad3a47678155e7b0a37949cd5",
+      "sha256": "cab2182da7b599b02cc2f22ca91f59bca9b1fa6e4ac558044da2c2f12cb05695",
       "upstream_unmodified": false
     },
     {
       "arch": "x86_64",
       "path": "ui/sso/open.cgi",
       "version": "go1.26.10",
-      "sha256": "1b165cbab6a39b9548a6ecc838f7a32416d27aaad3a47678155e7b0a37949cd5",
+      "sha256": "cab2182da7b599b02cc2f22ca91f59bca9b1fa6e4ac558044da2c2f12cb05695",
       "upstream_unmodified": false
     },
     {
       "arch": "x86_64",
       "path": "ui/sso/settings.cgi",
       "version": "go1.26.10",
-      "sha256": "1b165cbab6a39b9548a6ecc838f7a32416d27aaad3a47678155e7b0a37949cd5",
+      "sha256": "cab2182da7b599b02cc2f22ca91f59bca9b1fa6e4ac558044da2c2f12cb05695",
       "upstream_unmodified": false
     }
-  ]
+  ],
+  "device_acceptance": {
+    "from": "1.37.4-0011",
+    "to": "1.37.4-0012",
+    "dsm": "7.3.2",
+    "status": "running",
+    "retention": {
+      "settings_unchanged": true,
+      "setting_file_count": 7,
+      "image_unchanged": true,
+      "mounts_unchanged": true,
+      "database_inode_unchanged": true,
+      "database_rows_unchanged": true,
+      "running": true,
+      "persistent_volumes_unchanged": true
+    },
+    "administrator_open": {
+      "administrator": true,
+      "desktop": true,
+      "menuLaunch": true,
+      "masterPasswordForm": true,
+      "menuNavigation": "same-tab",
+      "launchPath": "/",
+      "daemonIngressPathStatus": 404
+    }
+  }
 }

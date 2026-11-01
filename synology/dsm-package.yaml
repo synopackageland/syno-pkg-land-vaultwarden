@@ -1,7 +1,7 @@
 schema: 2
 package: SynoPkgVaultwarden
 version: 1.37.4
-build: 11
+build: 12
 displayname: Vaultwarden
 icon: assets/icon.png
 description: Store and manage passwords and secure notes in an encrypted vault
@@ -19,7 +19,7 @@ install:
 entry: admin-only
 capabilities: {}
 compose:
-  sdk: 0.38.2
+  sdk: 0.42.0
   files: [compose.yaml]
   web: {service: vaultwarden, port: 29800, health: {path: /alive, status: 200}}
   network: {egress: internet}
@@ -42,7 +42,7 @@ identity_gateway:
   # Native clients use these without DSM cookies. Browser-only /identity/connect/authorize and
   # /identity/connect/oidc-signin keep the DSM gate, which rewrites the loopback issuer redirect.
   upstream_auth_paths: [/api, /identity/connect/token, /identity/accounts, /identity/sso, /notifications, /attachments, /events, /icons]
-  sdk: 0.38.2
+  sdk: 0.42.0
   external_access: {connect: optional, origin_change: confirm, single_origin: true}
   mode: oidc
   access: dsm-admins
