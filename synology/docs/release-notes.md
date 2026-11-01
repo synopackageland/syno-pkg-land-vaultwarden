@@ -1,6 +1,17 @@
 # Release notes
 
 
+## 1.37.4-0012: CLI 0.42.2 / SDK 0.42.0 rebuild
+
+Rebuilt with released CLI 0.42.2, SDK/App 0.42.0, templates 0.37.0 and the
+SDK-declared executor/v0.39.0. The upstream Vaultwarden 1.37.4 image and digest,
+administrator-only entry policy, storage and saved settings are unchanged.
+This package has no direct SDK/App/UI npm dependency; it uses the Compose and
+identity gateway SDK pins. Its DSM menu entry remains the generated
+`/webman/3rdparty/SynoPkgVaultwarden/sso/open.cgi`; the fixed
+`/synopkgland/<package>/` rule applies to `daemon.ingress`, which this package
+does not declare.
+
 ## 1.37.4-0011: SDK 0.38.2 rebuild
 
 Built with SDK/App 0.38.2, CLI 0.41.9, templates 0.35.5 and executor v0.38.2.
