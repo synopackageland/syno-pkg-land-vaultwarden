@@ -1,3 +1,13 @@
+## 1.37.4-0015
+
+- en: Install wizard: port conflicts only warn; shared folder selection fixed
+- zh-TW: 安裝精靈：連接埠衝突僅顯示警告，並修正共用資料夾選擇
+- zh-CN: 安装向导：端口冲突仅显示警告，并修复共享文件夹选择
+- de: Installationsassistent: Portkonflikte werden nur als Warnung angezeigt; Auswahl freigegebener Ordner korrigiert
+- fr: Assistant d’installation : les conflits de ports affichent seulement un avertissement ; sélection des dossiers partagés corrigée
+- ja: インストールウィザード：ポート競合は警告のみ表示し、共有フォルダーの選択を修正
+- ko: 설치 마법사: 포트 충돌은 경고만 표시하며 공유 폴더 선택 수정
+
 ## 1.37.4-0014
 
 - Move the browser entry to `/synopkgland/SynoPkgVaultwarden/` on DSM HTTPS
