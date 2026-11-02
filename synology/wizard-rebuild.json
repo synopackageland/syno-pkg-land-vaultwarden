@@ -1,0 +1,46 @@
+{
+  "package": "SynoPkgVaultwarden",
+  "previousVersion": "1.37.4-0014",
+  "version": "1.37.4-0015",
+  "cli": "0.47.4",
+  "sdk": "0.43.1",
+  "sdkChanged": false,
+  "uiChanged": false,
+  "templates": "0.38.0",
+  "architectures": [
+    "x86_64"
+  ],
+  "artifacts": [
+    {
+      "name": "SynoPkgVaultwarden-1.37.4-0015-x86_64.spk",
+      "sha256": "89562233c9556a4cd7519a525271aad1b5f923366d9185cca1ff0b3f01b2dede",
+      "size": 28274176
+    }
+  ],
+  "validation": {
+    "check": "passed",
+    "build": "passed",
+    "inspect": {
+      "passed": true,
+      "findings": [],
+      "dsmOk": true
+    },
+    "publicScan": {
+      "status": "passed",
+      "scope": [
+        "synology/",
+        "decoded SPK members"
+      ],
+      "externalDenylist": true,
+      "npmRegistry": "https://registry.npmjs.org/"
+    },
+    "tests": "not run as requested",
+    "nasInstalls": "not run",
+    "liveChecks": "not run"
+  },
+  "approvalRetention": {
+    "status": "unknown",
+    "baselineInspectCode": "APPROVAL_BASELINE_INVALID",
+    "reason": "Previous released SPK was rejected by the current inspector for its legacy install_uifile declaration; no runtime approval retention is claimed"
+  }
+}

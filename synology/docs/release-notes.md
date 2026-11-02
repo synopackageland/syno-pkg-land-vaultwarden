@@ -1,3 +1,10 @@
+## 1.37.4-0015
+
+Install wizard: port conflicts only warn; shared folder selection fixed
+
+Rebuilt with CLI 0.47.4; SDK/UI pins retained. No tests, NAS installs or live checks were run
+Approval retention is unknown because the current inspector rejects the previous release’s legacy wizard baseline
+
 ## 1.37.4-0014
 
 The browser entry moves to `/synopkgland/SynoPkgVaultwarden/` on the configured
