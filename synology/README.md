@@ -1,16 +1,14 @@
 # Vaultwarden for DSM
 
 
-## 1.37.4-0012: CLI 0.42.2 / SDK 0.42.0 rebuild
+## 1.37.4-0014: DSM path ingress
 
-Rebuilt with released CLI 0.42.2, SDK/App 0.42.0, templates 0.37.0 and the
-SDK-declared executor/v0.39.0. The upstream Vaultwarden 1.37.4 image and digest,
-administrator-only entry policy, storage and saved settings are unchanged.
-This package has no direct SDK/App/UI npm dependency; it uses the Compose and
-identity gateway SDK pins. Its DSM menu entry remains the generated
-`/webman/3rdparty/SynoPkgVaultwarden/sso/open.cgi`; the fixed
-`/synopkgland/<package>/` rule applies to `daemon.ingress`, which this package
-does not declare.
+Vaultwarden opens at `/synopkgland/SynoPkgVaultwarden/` on the configured DSM
+HTTPS origin. Built with released CLI 0.43.0, SDK/App 0.43.1, templates 0.38.0
+and executor/v0.39.0, without source overrides. The official Vaultwarden 1.37.4
+image digest, administrator-only entry policy and persistent volumes are unchanged.
+The old public gateway HTTPS listener is removed; the OIDC issuer remains loopback-only.
+The DSM menu preserves the native SSO launch route under the package namespace.
 
 ## 1.37.4-0011: SDK 0.38.2 rebuild
 
@@ -45,7 +43,7 @@ DSM 主選單透過固定原生 `/#/sso?identifier=00000000-01DC-01DC-01DC-00000
 `/notifications`、`/attachments`、`/events`、`/icons` 交由 Vaultwarden 自己驗證，
 供原生用戶端、API 與 WebSocket 使用。瀏覽器的 `/identity/connect/authorize` 與
 `/identity/connect/oidc-signin` 保留 DSM gate，gateway 才會把 issuer 轉址改寫成公開網址。
-目前 entry/access 均以管理員為限，不宣稱一般使用者驗收完成。
+目前 entry/access 均以管理員為限，一般使用者應收到拒絕存取頁。
 
 **第一次仍須建主密碼，之後仍須主密碼解鎖保險庫。** DSM SSO 不能解密、代填
 或繞過主密碼。主密碼遺失無法由 DSM 管理員取回。
@@ -63,37 +61,23 @@ sessions、API keys 或離線保險庫**。新登入仍須 DSM 授權。自動�
 `ADMIN_TOKEN` 不設定，`/admin` 保持上游停用說明；DSM admin claim 不等於
 Vaultwarden 的管理 token。
 
-## 安裝與 HTTPS origin
+## 安裝與 DSM HTTPS origin
 
-1. 先讓管理員透過預定主機名稱開啟 DSM，並準備相符、用戶端受信任的 TLS 憑證。
-2. 在套件中心手動安裝 SPK，保留原有 SDK consent／資料沿用提示。
-3. 「App ports」步驟可改 gateway HTTPS（預設 29443）與登入 issuer（預設 29090）連接埠；
-   升級沿用已儲存的連接埠，要改需重裝。
-   在 SDK 原生「Public HTTPS origin」欄位輸入 `https://<開啟 DSM 的主機名稱>:<gateway HTTPS port>`。
-   必須是根 origin，不能含帳密、路徑、query 或 fragment；目前此精靈接受 DNS
-   名稱／IPv4，未加入 IPv6 literal。驗收 fixture 可另用專屬 gateway port。
-4. SDK hooks 以非 root package account 驗證並原子寫入 0600 私有設定，唯讀掛載後作為
-   Vaultwarden `DOMAIN`。值會保留供升級使用；不是 SPK 內的固定示例網址。
-5. 從 DSM 主選單開啟 Vaultwarden，依上游流程建主密碼或解鎖。
+1. 先讓管理員透過預定名稱開啟 DSM，並準備相符、用戶端受信任的 TLS 憑證
+2. 在套件中心原地升級或手動安裝 SPK，保留既有資料
+3. 「App ports」只設定 loopback OIDC issuer 連接埠（預設 29090），沒有公開 gateway port
+4. 「DSM HTTPS origin」輸入目前 DSM 的 HTTPS origin，例如 `https://<DSM 主機名稱>:5001`，
+   不含路徑、query、fragment 或尾斜線
+5. 從 DSM 主選單開啟 Vaultwarden，依上游流程建立主密碼或解鎖
 
-App URL 與 DOMAIN 必須一致，包括 port。未設定外網網址時，請透過相同主機名稱
-開啟 DSM menu；從另一個 NAS alias/IP 開啟可能使 OIDC callback origin 不一致。
-不要自動猜測對外域名。
+從舊 dedicated-port 版本升級時，請在升級參數 `pkgwizard_setting_public_origin`
+提供 DSM HTTPS origin，取代舊 gateway origin。SDK 保留設定與 issuer port；App 原生
+`ENV_FILE` 將 origin 組合為 `DOMAIN=<DSM origin>/synopkgland/SynoPkgVaultwarden`，
+API、SSO callback、Web Vault 與 WebSocket 因而使用相同路徑。健康探針也使用該路徑下的 `/alive`。
 
-### 外網網址（唯一登入網址）
-
-上游 SSO callback、CORS、WebAuthn 與郵件連結都由單一 `DOMAIN` 衍生，SSO 也綁定
-只屬於該主機的 cookie，因此只能在 `DOMAIN` 主機登入。從內網開啟 DSM 後，到
-`/webman/3rdparty/SynoPkgVaultwarden/sso/settings.cgi` 設定外網網址（或由
-Connect 提供）。重新啟動 App 後 `DOMAIN` 改為該網址，它成為唯一登入網址：
-
-- 從 DSM 主選單開啟會直接前往該網址。
-- 瀏覽器開啟內網 gateway HTTPS port 位址時會轉到該網址；原生用戶端 API 不轉址。
-- 變更網址需勾選確認：之後只能用此網址登入；Tailscale 網址另提示只有 tailnet
-  中的裝置能連線。內網裝置也必須能連到這個網址。
-- 清除外網網址並重新啟動後，`DOMAIN` 回到安裝時網址。不同 hostname 的專用反向代理、子路徑與隨意 port 重寫未驗收。
-需要反向代理時，管理員須保留 Host、HTTPS 訊號、原生 API、OIDC callback 及
-`/notifications/hub` WebSocket upgrade，並重新驗證完整登入。
+上游 SSO、CORS、WebAuthn 與郵件連結由單一 `DOMAIN` 衍生。請透過設定的同一個
+DSM origin 開啟 App；使用其他 alias 或 IP 需要重新驗證 callback 與瀏覽器 origin。
+目前只驗證 DSM 路徑入口，不宣稱 Connect、QuickConnect 或其他外部 provider 已通過。
 
 瀏覽器接受自簽憑證不表示官方 Bitwarden CLI／擴充會信任它。缺少受信任、名稱
 相符的 HTTPS endpoint 時，只能記錄原生用戶端限制；不關閉 TLS 驗證、不修改
@@ -112,7 +96,7 @@ Manager 的程序處理殘留 volume，套件不取得 root 或 Docker socket �
 
 ## 開發驗證
 
-在 Linux builder 使用正式 CLI 0.42.2、templates 0.37.0、SDK/App 0.42.0。正式產物不使用 source override 或 Go replace。
+在 Linux builder 使用正式 CLI 0.43.0、templates 0.38.0、SDK/App 0.43.1。正式產物不使用 source override 或 Go replace。
 
 ```sh
 cd synology
@@ -123,11 +107,10 @@ npm run check
 npm run build
 ```
 
-CLI 原生 build 會產生安裝欄位及 SDK 設定控制器，check／build／inspect 會列出
-宣告但不列出私有值。App 只宣告 `install.settings.public_origin`、
-`DOMAIN: {external_origin: true, setting: public_origin}` 與
-`identity_gateway.external_access.single_origin: true`，不提供安裝設定 shell hooks 或重寫 SPK。
-安裝時空白沿用已保留設定；首次安裝缺值會拒絕，升級／重裝由 SDK 保留。
+CLI 原生 build 會產生安裝欄位與 SDK 設定控制器。App 只宣告
+`install.settings.public_origin` 與 `VAULTWARDEN_ORIGIN: {external_origin: true, setting: public_origin}`，
+再由既有 `sso.env` 組合完整 `DOMAIN` 與 loopback issuer，沒有安裝 shell hooks 或 SPK 重寫。
+Gateway 的 launch、callback 與原生用戶端例外維持相對路徑，由 SDK 加一次 namespace。
 
 ### App-open smoke
 
@@ -139,8 +122,8 @@ mode 600 的 `DSM_E2E_ACCOUNT_ADMIN`／`DSM_E2E_ACCOUNT_NORMAL`（`{username,pas
 repo 外的 `DSM_E2E_PROFILE_DIR` 與已忽略的 `DSM_E2E_OUTPUT_DIR`。smoke 不安裝套件、
 不改帳號或權限；N 被略過不算驗收完成。
 
-e2e suite 使用 repo 外的 DSM profiles／主密碼檔、私有 output 目錄；缺少 fixture
-不算通過。公開提交前以 `scripts/public-scan.py --denylist <private-file>` 掃描。
+e2e suite 使用 mode 600 的 DSM profiles／主密碼檔（repo 外或已忽略的私有目錄）；缺少 fixture
+不算通過。測試自簽 DSM 憑證時可明確設定 `VW_E2E_ALLOW_SELF_SIGNED=1`，正式用戶端信任不因此成立。公開提交前以 `scripts/public-scan.py --denylist <private-file>` 掃描。
 驗收範圍及尚未證明的部分見 [validation](docs/validation.md)。
 
 ## Official package icon

@@ -1,7 +1,7 @@
 schema: 2
 package: SynoPkgVaultwarden
 version: 1.37.4
-build: 12
+build: 14
 displayname: Vaultwarden
 icon: assets/icon.png
 description: Store and manage passwords and secure notes in an encrypted vault
@@ -15,13 +15,13 @@ arches: [x86_64]
 install:
   ports: true
   settings:
-    public_origin: {type: https-origin, label: Public HTTPS origin (include the gateway HTTPS port), required: true}
+    public_origin: {type: https-origin, label: DSM HTTPS origin, required: true}
 entry: admin-only
 capabilities: {}
 compose:
-  sdk: 0.42.0
+  sdk: 0.43.1
   files: [compose.yaml]
-  web: {service: vaultwarden, port: 29800, health: {path: /alive, status: 200}}
+  web: {service: vaultwarden, port: 29800, health: {path: /synopkgland/SynoPkgVaultwarden/alive, status: 200}}
   network: {egress: internet}
   services:
     vaultwarden:
@@ -31,23 +31,22 @@ compose:
         directories: [{base: /var/tmp, path: vaultwarden}]
         runtime:
           environment:
-            DOMAIN: {external_origin: true, setting: public_origin}
+            VAULTWARDEN_ORIGIN: {external_origin: true, setting: public_origin}
             SSO_CLIENT_SECRET: {oidc_client: vaultwarden}
             SSO_ISSUER_PORT: {port: oidc_issuer}
-          # Vaultwarden's ENV_FILE expands ${SSO_ISSUER_PORT} from the process environment.
+          # Native ENV_FILE expansion keeps both DOMAIN and SSO on the package path.
           files:
             - target: /var/tmp/vaultwarden/sso.env
-              content: "SSO_AUTHORITY=http://127.0.0.1:${SSO_ISSUER_PORT}\n"
+              content: "DOMAIN=${VAULTWARDEN_ORIGIN}/synopkgland/SynoPkgVaultwarden\nSSO_AUTHORITY=http://127.0.0.1:${SSO_ISSUER_PORT}\n"
 identity_gateway:
   # Native clients use these without DSM cookies. Browser-only /identity/connect/authorize and
   # /identity/connect/oidc-signin keep the DSM gate, which rewrites the loopback issuer redirect.
   upstream_auth_paths: [/api, /identity/connect/token, /identity/accounts, /identity/sso, /notifications, /attachments, /events, /icons]
-  sdk: 0.42.0
-  external_access: {connect: optional, origin_change: confirm, single_origin: true}
+  sdk: 0.43.1
   mode: oidc
   access: dsm-admins
   launch_path: /#/sso?identifier=00000000-01DC-01DC-01DC-000000000000
-  listen: {https: 29443}
+  ingress: {path: /synopkgland/SynoPkgVaultwarden/}
   email_domain: dsm.invalid
   oidc:
     native_login: true

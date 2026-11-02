@@ -1,3 +1,11 @@
+## 1.37.4-0014
+
+The browser entry moves to `/synopkgland/SynoPkgVaultwarden/` on the configured
+DSM HTTPS origin. During migration, supply the DSM origin as
+`pkgwizard_setting_public_origin`; the old gateway port is no longer public.
+The native OIDC issuer remains loopback-only. The official image, encrypted
+vault data and administrator-only entry policy are retained.
+
 # Release notes
 
 

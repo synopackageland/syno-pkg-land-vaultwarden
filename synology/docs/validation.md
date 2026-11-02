@@ -1,6 +1,39 @@
 # Validation record
 
-The current candidate is 1.37.4-0012, built on Linux with released CLI 0.42.2,
+## 1.37.4-0014 DSM path ingress
+
+The current candidate uses published CLI 0.43.0, SDK/App 0.43.1, templates 0.38.0
+and executor/v0.39.0, without source overrides or Go replace. The official
+Vaultwarden 1.37.4 image and digest remain unchanged. Only `synology/` changes.
+
+- Check and x86_64 build pass; inspect has `findings=[]` (the DSM guide linter reports
+  two informational unknown-field warnings for the CLI-generated nginx lifecycle reload fields)
+- Wrapper tests: 10 passed; SDK gateway tests: 6 passed; requirements variant: 8 passed
+- All 125 resolved npm URLs use the official registry
+- In-place upgrade preserves the named volumes and database inode, and DSM reports running
+- The old public HTTPS gateway listener is closed; the OIDC issuer is loopback-only
+- Native health, API config, SSO connector and browser resources resolve under the package prefix
+- App-open smoke passes A (disposable administrator), N (ordinary user denied), X (DSM login gate)
+- The existing native Web Vault E2E suite passes 3/3: disposable account setup, encrypted login-item
+  save, logout/reopen/master-password unlock and item readback; normal-user OIDC denial and native token API
+- The authenticated notification WebSocket returns 101 under the package-prefixed hub;
+  editing an item in a second tab delivers a binary update frame to the receiver
+- The bounded official-image runtime probe passes native DOMAIN expansion, assets/API/SSO connector,
+  nonroot/read-only startup, signup/password restrictions and restart persistence
+
+The disposable Vaultwarden account, its test items and the disposable DSM user were removed.
+Two browser-probe device records were removed only after matching their baseline absence and
+recorded creation timestamps. Final users, ciphers, devices and SSO-user rows match the original
+backup exactly; database inode is unchanged and SQLite quick_check returns ok. The original
+DSM account-name set is unchanged. Private credentials and session artifacts are deleted after acceptance.
+
+No release, catalog update or publication is included. External providers and
+trusted-TLS native clients are outside this acceptance scope. Exact artifact and
+binary hashes are recorded in `../security-rebuild.json`.
+
+## Historical records
+
+The earlier candidate was 1.37.4-0012, built on Linux with released CLI 0.42.2,
 templates 0.37.0 and SDK/App 0.42.0. The SDK release manifest maps to
 executor/v0.39.0; no source override or Go replace is used.
 
