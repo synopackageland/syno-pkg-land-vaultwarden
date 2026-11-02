@@ -7,5 +7,5 @@ export default defineConfig({
   timeout: 120_000,
   outputDir: process.env.VW_E2E_OUTPUT_DIR || './.e2e/results',
   reporter: [['list']],
-  use: {ignoreHTTPSErrors: false, trace: 'retain-on-failure', screenshot: 'only-on-failure'},
+  use: {ignoreHTTPSErrors: process.env.VW_E2E_ALLOW_SELF_SIGNED === '1', trace: 'retain-on-failure', screenshot: 'only-on-failure'},
 });

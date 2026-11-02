@@ -1,3 +1,11 @@
+## 1.37.4-0014
+
+- Move the browser entry to `/synopkgland/SynoPkgVaultwarden/` on DSM HTTPS
+- Remove the dedicated public gateway port and keep the loopback OIDC issuer
+- Compose the native DOMAIN with the package path in Vaultwarden ENV_FILE
+- Use CLI 0.43.0, SDK/App 0.43.1 and templates 0.38.0
+- Preserve administrator-only admission, native-client API exceptions and persistent data
+
 # Changelog
 
 
