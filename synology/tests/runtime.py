@@ -2,9 +2,11 @@
 """Bounded official-image probe. Not DSM/OIDC end-to-end acceptance."""
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import time
+import tempfile
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -15,6 +17,7 @@ prefix = os.environ.get('SPL_RESOURCE_PREFIX', 'vaultwarden-proof')
 if not prefix or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in prefix):
     raise SystemExit('Invalid resource prefix')
 name, volume = prefix + '-app', prefix + '-data'
+namespace = '/synopkgland/SynoPkgVaultwarden'
 def docker(*args):
     return subprocess.check_output(['docker', *args], text=True).strip()
 def http(path, data=None):
@@ -29,6 +32,7 @@ assert config['Labels']['org.opencontainers.image.revision'] == '7c188967e7a467b
 results = {'upstream_revision_matches': True, 'dsm_tested': False, 'oidc_login_tested': False}
 created_volume = False
 created_container = False
+env_file = None
 try:
     # Never adopt or delete an existing resource with the requested name.
     for kind, target in [('container', name), ('volume', volume)]:
@@ -36,17 +40,24 @@ try:
             raise SystemExit('Fixture resource already exists')
     docker('volume', 'create', volume)
     created_volume = True
+    env_file = tempfile.NamedTemporaryFile(mode='w', prefix=prefix, delete=False)
+    # Use the manifest's native ENV_FILE, supplied by the caller, without emulating dotenv expansion.
+    env_file.write(os.environ['SPL_ENV_CONTENT'])
+    env_file.close()
+    os.chmod(env_file.name, 0o644)
     env = {
-        'ROCKET_ADDRESS': '0.0.0.0', 'ROCKET_PORT': '8080', 'DOMAIN': 'https://vault.example',
+        'ROCKET_ADDRESS': '0.0.0.0', 'ROCKET_PORT': '8080', 'VAULTWARDEN_ORIGIN': 'https://vault.example:5001',
+        'ENV_FILE': '/tmp/sso.env', 'SSO_ISSUER_PORT': '29090',
         'DATA_FOLDER': '/var/tmp/vaultwarden', 'SIGNUPS_ALLOWED': 'false', 'INVITATIONS_ALLOWED': 'false',
         'SSO_ENABLED': 'true', 'SSO_ONLY': 'true', 'SSO_SIGNUPS_ALLOWED': 'true',
         'SSO_SIGNUPS_MATCH_EMAIL': 'false', 'SSO_ALLOW_UNKNOWN_EMAIL_VERIFICATION': 'false',
-        'SSO_AUTHORITY': 'http://127.0.0.1:29090', 'SSO_CLIENT_ID': 'vaultwarden',
+        'SSO_CLIENT_ID': 'vaultwarden',
         'SSO_CLIENT_SECRET': 'non-production-fixture', 'SSO_DEBUG_TOKENS': 'false',
     }
     args = ['run', '-d', '--name', name, '--user', '12345:12345', '--cap-drop', 'ALL',
             '--security-opt', 'no-new-privileges:true', '--read-only', '--tmpfs', '/tmp',
             '-p', '127.0.0.1::8080', '-v', volume + ':/var/tmp',
+            '-v', env_file.name + ':/tmp/sso.env:ro',
             '-v', initializer + ':/sdk-storage-init:ro', '--entrypoint', '/sdk-storage-init']
     for key, value in env.items():
         args += ['-e', key + '=' + value]
@@ -54,8 +65,8 @@ try:
     docker(*args)
     created_container = True
     port = docker('port', name, '8080/tcp').rsplit(':', 1)[1]
-    base = 'http://127.0.0.1:' + port
-    deadline = time.monotonic() + 45
+    base = 'http://127.0.0.1:' + port + namespace
+    deadline = time.monotonic() + 120
     while True:
         try:
             if http('/alive')[0] == 200: break
@@ -65,7 +76,26 @@ try:
     results['nonroot_readonly_health'] = True
     status, body = http('/')
     assert status == 200 and b'<head>' in body
+    assets = re.findall(r'<(?:script|link)\b[^>]*(?:src|href)="([^"]+)"', body.decode())
+    assert assets, 'Web Vault declares no assets'
+    for asset in assets:
+        url = urllib.parse.urljoin(base + '/', asset)
+        parsed = urllib.parse.urlparse(url)
+        if parsed.netloc != urllib.parse.urlparse(base).netloc:
+            continue
+        assert parsed.path.startswith(namespace + '/'), 'Asset escaped package path'
+        with urllib.request.urlopen(url, timeout=5) as response:
+            assert response.status == 200
     results['upstream_web_vault_served'] = True
+    results['native_domain_path_expanded'] = True
+    status, body = http('/api/config')
+    assert status == 200
+    config = json.loads(body)
+    assert config['environment']['vault'] == 'https://vault.example:5001' + namespace
+    results['prefixed_api_config'] = True
+    status, body = http('/sso-connector.html')
+    assert status == 200
+    results['prefixed_native_sso_connector'] = True
     status, body = http('/admin')
     assert status == 200 and b'The admin panel is disabled' in body
     results['admin_disabled'] = True
@@ -92,6 +122,8 @@ try:
     results['database_survives_container_restart'] = True
     print(json.dumps(results, indent=2))
 finally:
+    if env_file is not None:
+        os.unlink(env_file.name)
     if created_volume:
         if created_container:
             subprocess.run(['docker', 'rm', '-fv', name], capture_output=True)

@@ -19,7 +19,7 @@ func front(t *testing.T, access string, passthrough []string, providerOnly ...bo
 	return frontWithPolicy(t, access, passthrough, upstreamAccess, "", nil)
 }
 
-func frontWithPolicy(t *testing.T, access string, passthrough []string, upstreamAccess, entry string, upstreamAuthPaths []string) (http.Handler, *int, error) {
+func frontWithPolicy(t *testing.T, access string, passthrough []string, upstreamAccess, entry string, upstreamAuthPaths []string, ingress ...string) (http.Handler, *int, error) {
 	t.Helper()
 	calls := new(int)
 	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -41,10 +41,32 @@ func frontWithPolicy(t *testing.T, access string, passthrough []string, upstream
 		Key: []byte(strings.Repeat("fixture-", 8)), Mode: gateway.ModeOIDC,
 		Access: access, UpstreamAccess: upstreamAccess, Passthrough: passthrough, Provider: provider,
 		Entry: entry, UpstreamAuthPaths: upstreamAuthPaths,
-		Issuer: "http://127.0.0.1:29090", AuthorizeCGI: "/webman/3rdparty/SynoPkgVaultwarden/sso/authorize.cgi",
+		IngressPath: strings.Join(ingress, ""),
+		Issuer:      "http://127.0.0.1:29090", AuthorizeCGI: "/webman/3rdparty/SynoPkgVaultwarden/sso/authorize.cgi",
 		DSMPorts: gateway.DSMPorts{HTTP: 5000, HTTPS: 5001},
 	})
 	return f, calls, err
+}
+
+func TestIngressScopesNativeAdmissionAndKeepsBrowserOIDCGated(t *testing.T) {
+	const prefix = "/synopkgland/SynoPkgVaultwarden"
+	paths := []string{"/api", "/identity/connect/token", "/identity/accounts", "/identity/sso", "/notifications", "/attachments", "/events", "/icons"}
+	f, calls, err := frontWithPolicy(t, "dsm-admins", nil, "", "admin-only", paths, prefix+"/")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range paths {
+		if got := request(f, "POST", prefix+path+"/fixture", ""); got != http.StatusTeapot {
+			t.Errorf("prefixed native path %s: got %d", path, got)
+		}
+	}
+	before := *calls
+	for _, path := range []string{"/api/config", "/identity/connect/token", "/synopkgland/Other/api/config", prefix + "/apiary", prefix + "/", prefix + "/identity/connect/authorize", prefix + "/identity/connect/oidc-signin"} {
+		request(f, "GET", path, "")
+	}
+	if *calls != before {
+		t.Fatal("unscoped native or gated browser request reached upstream")
+	}
 }
 
 func TestAdminEntryOpensOnlyDeclaredNativePaths(t *testing.T) {
