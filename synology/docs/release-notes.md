@@ -1,3 +1,17 @@
+## 1.37.4-0018
+
+Opening the web vault over HTTP now shows the SDK's standard HTTPS guidance,
+without an automatic redirect. When DSM HTTPS port discovery is available the
+SDK offers an explicit HTTPS link; otherwise it shows instructions. HTTP API requests
+return `https_required`. HTTPS sign-in and vault unlocking keep their normal flow.
+
+Built with CLI 0.48.15 and SDK/App 0.50.8 using the gateway's declarative
+`secure_context: required` option. The upstream Vaultwarden version and image,
+administrator admission, saved settings and encrypted vault data are retained.
+
+Offline approval retention could not be determined from the previous package's
+executor inventory; no approval retention is claimed.
+
 ## 1.37.4-0015
 
 Install wizard: port conflicts only warn; shared folder selection fixed
