@@ -1,5 +1,24 @@
 # Vaultwarden for DSM
 
+## 1.37.4-0019: HTTPS guidance link
+
+SDK/App 0.50.10 reads the declared DSM HTTPS port from the DSM web configuration
+so the HTTP guidance page can offer a working HTTPS link. CLI remains 0.48.15.
+The page stays on HTTP until the link is selected; HTTPS retains the normal
+DSM sign-in and master-password unlock flow.
+
+## 1.37.4-0018: HTTP secure-context guidance
+
+Vaultwarden's web vault needs WebCrypto in a secure browser context. The package
+uses the SDK's `identity_gateway.secure_context: required` option: an HTTP page
+navigation displays the standard HTTPS guidance without redirecting automatically.
+The SDK offers an explicit HTTPS link when it can discover the DSM HTTPS port;
+otherwise it shows instructions to reopen DSM over HTTPS. HTTP API requests
+return `https_required`. HTTPS retains the normal sign-in and vault unlock flow.
+
+Built with released CLI 0.48.15 and SDK/App 0.50.8. The official Vaultwarden image,
+administrator admission, saved settings and encrypted vault data are retained.
+
 
 ## 1.37.4-0014: DSM path ingress
 
@@ -96,7 +115,7 @@ Manager 的程序處理殘留 volume，套件不取得 root 或 Docker socket �
 
 ## 開發驗證
 
-在 Linux builder 使用正式 CLI 0.43.0、templates 0.38.0、SDK/App 0.43.1。正式產物不使用 source override 或 Go replace。
+在 Linux builder 使用正式 CLI 0.48.15、templates 0.40.1、SDK/App 0.50.10。正式產物不使用 source override 或 Go replace。
 
 ```sh
 cd synology
