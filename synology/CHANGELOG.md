@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.37.4-0019
+
+- en: Fix the HTTPS link on the HTTP guidance page
+- zh-TW: 修正 HTTP 引導頁的 HTTPS 連結
+- zh-CN: 修复 HTTP 引导页的 HTTPS 链接
+- ja: HTTP 案内ページの HTTPS リンクを修正
+- ko: HTTP 안내 페이지의 HTTPS 링크 수정
+- de: HTTPS-Link auf der HTTP-Hinweisseite korrigiert
+- fr: Corriger le lien HTTPS sur la page d’instructions HTTP
+
+## 1.37.4-0018
+
+- en: Show HTTPS guidance when opening the web vault over HTTP
+- zh-TW: 以 HTTP 開啟網頁保險庫時顯示 HTTPS 引導
+- zh-CN: 通过 HTTP 打开网页密码库时显示 HTTPS 引导
+- ja: HTTP で Web 保管庫を開く際に HTTPS の案内を表示
+- ko: HTTP로 웹 보관함을 열 때 HTTPS 안내 표시
+- de: HTTPS-Hinweis beim Öffnen des Web-Tresors über HTTP anzeigen
+- fr: Afficher les instructions HTTPS à l’ouverture du coffre web en HTTP
+
 ## 1.37.4-0017
 
 - en: Fix DSM sign-in when opening over HTTP

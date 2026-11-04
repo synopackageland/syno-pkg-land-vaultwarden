@@ -1,5 +1,31 @@
 # Validation record
 
+## 1.37.4-0018 secure-context guidance
+
+Built with published CLI 0.48.15, SDK/App 0.50.8 and templates 0.40.1,
+without source overrides. The upstream image and administrator policy are retained.
+
+- Check and x86_64 build pass; independent inspection against build 0017 has
+  `findings=[]` and the same two informational unknown INFO-field warnings
+- Wrapper tests: 10 passed; SDK gateway tests: 6 passed; requirements variant: 8 passed
+- All 125 npm lockfile URLs use the official registry
+- The embedded gateway configuration has `secure_context: required`
+- In-place upgrade from 0017 reaches version 0018 and DSM reports running
+- Cold HTTP DSM sign-in and menu launch reach the SDK's 403 guidance page without
+  an automatic HTTPS redirect; HTTP API requests return `https_required`
+- Direct HTTPS entry completes DSM/OIDC sign-in and unlocks the existing vault;
+  returning to HTTP displays the guidance again
+- **Blocked:** the HTTP guidance has no HTTPS link on the tested DSM 7.3.2 system.
+  SDK 0.50.8 cannot discover its declared HTTPS port from the configuration source
+  it reads. Port declarations are present in DSM's readable web configuration.
+  This needs an SDK fix; the package adds no discovery or rendering workaround
+
+HTTPS navigation through the guidance link has not passed. Full lifecycle,
+native-client and vault-item write/readback suites were not rerun for this change.
+Offline approval retention remains unknown because the baseline comparison has
+no comparable executor inventory. This candidate must remain a draft until the
+SDK link-discovery defect is fixed and device acceptance passes.
+
 ## 1.37.4-0014 DSM path ingress
 
 The current candidate uses published CLI 0.43.0, SDK/App 0.43.1, templates 0.38.0

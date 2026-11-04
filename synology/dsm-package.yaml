@@ -1,20 +1,20 @@
 schema: 2
 package: SynoPkgVaultwarden
 version: 1.37.4
-build: 17
+build: 19
 displayname: Vaultwarden
 icon: assets/icon.png
 description: Store and manage passwords and secure notes in an encrypted vault
 maintainer: Daniel García
 metadata:
   changelog:
-    en: "Fix DSM sign-in when opening over HTTP"
-    zh-TW: "修正以 HTTP 開啟時的 DSM 登入"
-    zh-CN: "修复通过 HTTP 打开时的 DSM 登录"
-    ja: "HTTP で開いた場合の DSM ログインを修正"
-    ko: "HTTP로 열 때 DSM 로그인 수정"
-    de: "DSM-Anmeldung beim Öffnen über HTTP korrigiert"
-    fr: "Corriger la connexion DSM lors de l’ouverture via HTTP"
+    en: "Fix the HTTPS link on the HTTP guidance page"
+    zh-TW: "修正 HTTP 引導頁的 HTTPS 連結"
+    zh-CN: "修复 HTTP 引导页的 HTTPS 链接"
+    ja: "HTTP 案内ページの HTTPS リンクを修正"
+    ko: "HTTP 안내 페이지의 HTTPS 링크 수정"
+    de: "HTTPS-Link auf der HTTP-Hinweisseite korrigiert"
+    fr: "Corriger le lien HTTPS sur la page d’instructions HTTP"
   maintainer_url: https://github.com/dani-garcia/vaultwarden
   distributor: Syno Package Land
   distributor_url: https://synopkgland.com/
@@ -27,7 +27,7 @@ install:
 entry: admin-only
 capabilities: {}
 compose:
-  sdk: 0.50.7
+  sdk: 0.50.10
   files: [compose.yaml]
   web: {service: vaultwarden, port: 29800, health: {path: /synopkgland/SynoPkgVaultwarden/alive, status: 200}}
   network: {egress: internet}
@@ -50,7 +50,8 @@ identity_gateway:
   # Native clients use these without DSM cookies. Browser-only /identity/connect/authorize and
   # /identity/connect/oidc-signin keep the DSM gate, which rewrites the loopback issuer redirect.
   upstream_auth_paths: [/api, /identity/connect/token, /identity/accounts, /identity/sso, /notifications, /attachments, /events, /icons]
-  sdk: 0.50.7
+  sdk: 0.50.10
+  secure_context: required
   mode: oidc
   access: dsm-admins
   launch_path: /#/sso?identifier=00000000-01DC-01DC-01DC-000000000000
