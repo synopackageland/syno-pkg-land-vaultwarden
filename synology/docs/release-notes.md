@@ -1,3 +1,14 @@
+## 1.37.4-0019
+
+Fix the HTTPS link on the HTTP guidance page with SDK/App 0.50.10. The SDK
+discovers the actual DSM HTTPS port from the DSM web configuration. The page
+does not redirect automatically; select the link to sign in and unlock the vault
+over HTTPS. CLI remains 0.48.15.
+
+The upstream Vaultwarden 1.37.4 image, administrator admission, saved settings
+and encrypted vault data are retained. Offline approval retention is unknown
+because the package has no comparable executor inventory.
+
 ## 1.37.4-0018
 
 Opening the web vault over HTTP now shows the SDK's standard HTTPS guidance,

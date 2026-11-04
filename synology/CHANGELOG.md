@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.37.4-0019
+
+- en: Fix the HTTPS link on the HTTP guidance page
+- zh-TW: 修正 HTTP 引導頁的 HTTPS 連結
+- zh-CN: 修复 HTTP 引导页的 HTTPS 链接
+- ja: HTTP 案内ページの HTTPS リンクを修正
+- ko: HTTP 안내 페이지의 HTTPS 링크 수정
+- de: HTTPS-Link auf der HTTP-Hinweisseite korrigiert
+- fr: Corriger le lien HTTPS sur la page d’instructions HTTP
+
 ## 1.37.4-0018
 
 - en: Show HTTPS guidance when opening the web vault over HTTP
