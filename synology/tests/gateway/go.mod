@@ -2,7 +2,7 @@ module example.com/vaultwarden-dsm-proof
 
 go 1.26.10
 
-require github.com/synopackageland/syno-pkg-land-sdk v0.49.3
+require github.com/synopackageland/syno-pkg-land-sdk v0.50.7
 
 require (
 	golang.org/x/sys v0.44.0 // indirect
