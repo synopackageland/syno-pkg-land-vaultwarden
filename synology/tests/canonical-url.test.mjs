@@ -29,6 +29,7 @@ test('OIDC and native-client admission retain relative paths and administrator p
   assert.equal(manifest.entry, 'admin-only');
   assert.equal(gateway.mode, 'oidc');
   assert.equal(gateway.access, 'dsm-admins');
+  assert.equal(gateway.secure_context, 'required');
   assert.equal(gateway.launch_path, '/#/sso?identifier=00000000-01DC-01DC-01DC-000000000000');
   assert.deepEqual(gateway.oidc.clients[0].redirect_paths, ['/identity/connect/oidc-signin']);
   assert.deepEqual(gateway.upstream_auth_paths, ['/api', '/identity/connect/token', '/identity/accounts', '/identity/sso', '/notifications', '/attachments', '/events', '/icons']);
@@ -36,5 +37,5 @@ test('OIDC and native-client admission retain relative paths and administrator p
 
 test('Compose and gateway pin the same SDK release', () => {
   assert.equal(manifest.compose.sdk, manifest.identity_gateway.sdk);
-  assert.equal(manifest.compose.sdk, '0.50.7');
+  assert.equal(manifest.compose.sdk, '0.50.8');
 });
