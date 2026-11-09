@@ -1,5 +1,37 @@
 # Validation
 
+## 1.37.4-0021: temporary files on disk
+
+Rebuilt with published SDK/App 0.53.25, CLI 0.52.16 and executor v0.53.6.
+The memory tmpfs at `/tmp` is replaced by SDK disk scratch
+(`compose.services.vaultwarden.scratch: [/tmp]`: package UID, mode 0700, emptied
+at every container start) and the environment sets `TMPDIR=/tmp`. No memory
+tmpfs remains; Vaultwarden needs no in-memory sockets or lock files. Upstream
+version and image digest are unchanged.
+
+The Node unit tests (10) and the Go gateway boundary tests pass, as do check,
+the x86_64 build with the previous official SPK as `--baseline` and inspect with
+the same baseline, with no findings. Approval retention is `not-required` and
+permissions are unchanged. A stale unit test that hard-coded an older SDK
+release now compares the manifest with `toolchain.json`. The generated Compose has
+no tmpfs and binds the package scratch directory at `/tmp`.
+
+One device pass on DSM 7.4.1 upgraded the installed package to the previous
+official 1.37.4-0020 (`/tmp` was tmpfs) and then to 1.37.4-0021. The package
+runs; `/tmp` is a bind of the package scratch directory on the btrfs data volume
+(not tmpfs), mode 0700, owned by the package UID/GID, writable, with
+`TMPDIR=/tmp`. The `/alive` health endpoint returns 200 and a DSM administrator
+reaches the Vaultwarden web vault through the DSM gateway over HTTPS. Vault
+operations, native clients and other DSM versions were not repeated.
+
+Known, unchanged by this build: the image's own Docker `HEALTHCHECK`
+(`/healthcheck.sh`) sources `sso.env`, where `${VAULTWARDEN_ORIGIN}` is not set in
+that shell, so it probes `//SynoPkgVaultwarden/alive` and gets 404. Docker
+therefore reports `starting` and later `unhealthy`, while the SDK health path and
+DSM package status are healthy. `sso.env` and the healthcheck are the same as in
+1.37.4-0020; overriding the Compose healthcheck is left for a separate change.
+
+
 ## 1.37.4-0020: sign-in page loading
 
 Rebuilt with published SDK/App 0.53.21 and CLI 0.52.13 to improve page loading

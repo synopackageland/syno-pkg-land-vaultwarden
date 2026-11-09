@@ -37,5 +37,6 @@ test('OIDC and native-client admission retain relative paths and administrator p
 
 test('Compose and gateway pin the same SDK release', () => {
   assert.equal(manifest.compose.sdk, manifest.identity_gateway.sdk);
-  assert.equal(manifest.compose.sdk, '0.50.10');
+  const toolchain = JSON.parse(readFileSync(new URL('../toolchain.json', import.meta.url), 'utf8'));
+  assert.equal(manifest.compose.sdk, toolchain.sdk);
 });

@@ -3,8 +3,8 @@ services:
     image: vaultwarden/server:1.37.4@sha256:efb3cde962015fcc036b2ea625242248611943b27212ebf4392841fb30fad055
     entrypoint: [/vaultwarden]
     read_only: true
-    tmpfs: [/tmp]
     environment:
+      TMPDIR: /tmp
       ROCKET_ADDRESS: 127.0.0.1
       ROCKET_PORT: "29800"
       DATA_FOLDER: /var/tmp/vaultwarden

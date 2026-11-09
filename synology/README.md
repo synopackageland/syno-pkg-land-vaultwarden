@@ -1,5 +1,14 @@
 # Vaultwarden for DSM
 
+## 1.37.4-0021: temporary files on disk
+
+Rebuilt with published SDK/App 0.53.25, CLI 0.52.16 and executor v0.53.6.
+The memory tmpfs at `/tmp` is replaced by SDK disk scratch
+(`compose.services.vaultwarden.scratch: [/tmp]`: package UID, mode 0700, emptied
+at every container start) and the environment sets `TMPDIR=/tmp`. No memory
+tmpfs remains; Vaultwarden needs no in-memory sockets or lock files. Upstream
+version and image digest are unchanged.
+
 ## 1.37.4-0020: sign-in page loading
 
 Rebuilt with published SDK/App 0.53.21 and CLI 0.52.13 to improve page loading
