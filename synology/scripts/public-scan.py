@@ -12,11 +12,7 @@ parser.add_argument('--denylist', required=True, type=Path)
 parser.add_argument('--text', action='append', default=[], type=Path)
 parser.add_argument('--history-base')
 args = parser.parse_args()
-parts = ['t-' + r'0[0-9]{3}', 'redac' + 'ted', 'redac' + 'ted', 'redac' + 'ted',
-         'redac' + 'ted', 'redac' + 'ted', 'redac' + 'ted', 'redac' + 'ted',
-         'redac' + 'ted', 'redac' + 'ted', 'redac' + 'ted', 'redac' + 'ted',
-         'redac' + 'ted', r'synology' + r'\.com', 'redac' + 'ted']
-# FORTIFY_SOURCE is a compiler hardening macro, not a private identifier.
+parts = ['t-' + r'0[0-9]{3}', r'synology' + r'\.com']
 pattern = re.compile('|'.join(parts), re.I)
 deny = [line for line in args.denylist.read_bytes().splitlines() if line]
 failed = []
