@@ -1,5 +1,13 @@
 # Vaultwarden for DSM
 
+## 1.37.4-0020: sign-in page loading
+
+Rebuilt with published SDK/App 0.53.21 and CLI 0.52.13 to improve page loading
+reliability when signing in. Concurrent asset requests share session admission
+and queue through the identity gateway. Upstream version and image digest are
+unchanged. This rebuild runs check, build, inspect comparison and privacy scans;
+unit, browser, container-runtime and device acceptance tests were not run.
+
 ## 1.37.4-0019: HTTPS guidance link
 
 SDK/App 0.50.10 reads the declared DSM HTTPS port from the DSM web configuration

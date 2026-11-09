@@ -1,6 +1,6 @@
 {
   "name": "syno-pkg-land-vaultwarden",
-  "version": "1.37.4-0019",
+  "version": "1.37.4-0020",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -18,7 +18,7 @@
     "@ai-sdk/openai": "4.0.91",
     "@e2e-dev/web": "0.14.0",
     "@playwright/test": "1.63.0",
-    "@synopackageland/cli": "0.48.15",
+    "@synopackageland/cli": "~0.52.13",
     "@synopackageland/templates": "0.40.1",
     "ai": "7.0.137",
     "e2e": "0.19.0"
