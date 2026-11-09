@@ -11,7 +11,8 @@
 - fr: Conserver les fichiers temporaires sur le disque plutôt qu’en mémoire
 
 Rebuilt with SDK/App 0.53.25, CLI 0.52.16 and executor v0.53.6. `/tmp` is SDK
-disk scratch instead of a memory tmpfs.
+disk scratch instead of a memory tmpfs. The Compose healthcheck probes the
+loopback `/alive` route.
 
 ## 1.37.4-0020
 

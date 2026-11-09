@@ -24,5 +24,13 @@ services:
       SSO_DEBUG_TOKENS: "false"
     volumes:
       - data:/var/tmp
+    # The image HEALTHCHECK derives its URL from sso.env without the SDK origin
+    # and probes a wrong path; check the native liveness route on loopback.
+    healthcheck:
+      test: [CMD-SHELL, "curl -fsS -m 10 -o /dev/null http://127.0.0.1:29800/synopkgland/SynoPkgVaultwarden/alive"]
+      interval: 60s
+      timeout: 15s
+      start_period: 120s
+      retries: 3
 volumes:
   data:

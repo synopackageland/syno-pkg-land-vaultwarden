@@ -8,6 +8,8 @@ The memory tmpfs at `/tmp` is replaced by SDK disk scratch
 at every container start) and the environment sets `TMPDIR=/tmp`. No memory
 tmpfs remains; Vaultwarden needs no in-memory sockets or lock files. Upstream
 version and image digest are unchanged.
+The Compose healthcheck now probes the loopback `/alive` route, so Docker
+reports `healthy`; the image's own check computed a wrong path and returned 404.
 
 The Node unit tests (10) and the Go gateway boundary tests pass, as do check,
 the x86_64 build with the previous official SPK as `--baseline` and inspect with
@@ -24,12 +26,17 @@ runs; `/tmp` is a bind of the package scratch directory on the btrfs data volume
 reaches the Vaultwarden web vault through the DSM gateway over HTTPS. Vault
 operations, native clients and other DSM versions were not repeated.
 
-Known, unchanged by this build: the image's own Docker `HEALTHCHECK`
-(`/healthcheck.sh`) sources `sso.env`, where `${VAULTWARDEN_ORIGIN}` is not set in
-that shell, so it probes `//SynoPkgVaultwarden/alive` and gets 404. Docker
-therefore reports `starting` and later `unhealthy`, while the SDK health path and
-DSM package status are healthy. `sso.env` and the healthcheck are the same as in
-1.37.4-0020; overriding the Compose healthcheck is left for a separate change.
+Docker health: the image's own `HEALTHCHECK` (`/healthcheck.sh`) sources
+`sso.env`, where `${VAULTWARDEN_ORIGIN}` is not set in that shell, so it probed
+`//SynoPkgVaultwarden/alive` and got 404; Docker reported `starting` and then
+`unhealthy` although the SDK health path was healthy (also in 1.37.4-0020).
+`compose.yaml` now overrides the healthcheck with a `CMD-SHELL` curl of the
+loopback `/alive` route. A first attempt passed `--max-time` and `"10"` as
+separate exec-form arguments; the generated Compose turned `"10"` into a number
+and Container Manager refused the project (`healthcheck.test.6 must be a
+string`), so the shell form is used. On the device the final 1.37.4-0021
+replaced that attempt in place; the container reports `healthy` (probe exit 0),
+`/tmp` is unchanged and the web vault loads after DSM sign-in.
 
 
 ## 1.37.4-0020: sign-in page loading

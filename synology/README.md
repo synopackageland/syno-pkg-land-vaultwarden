@@ -8,6 +8,8 @@ The memory tmpfs at `/tmp` is replaced by SDK disk scratch
 at every container start) and the environment sets `TMPDIR=/tmp`. No memory
 tmpfs remains; Vaultwarden needs no in-memory sockets or lock files. Upstream
 version and image digest are unchanged.
+The Compose healthcheck now probes the loopback `/alive` route, so Docker
+reports `healthy`; the image's own check computed a wrong path and returned 404.
 
 ## 1.37.4-0020: sign-in page loading
 

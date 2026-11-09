@@ -17,7 +17,7 @@
     "x86_64"
   ],
   "spk": "SynoPkgVaultwarden-1.37.4-0021-x86_64.spk",
-  "spk_sha256": "00e261d70f12c561ac144848a490bf5c124893cb911279f64f9f149ca738d841",
+  "spk_sha256": "fcc1390d10b8ede723349f3d79f9ffc5502b087922ad5c83cd9fa08eca4bb358",
   "checks": {
     "check": true,
     "build": true,
@@ -55,5 +55,9 @@
     ],
     "tmpfs": [],
     "TMPDIR": "/tmp"
+  },
+  "healthcheck": {
+    "test": "CMD-SHELL curl loopback /alive",
+    "docker_health": "healthy"
   }
 }
