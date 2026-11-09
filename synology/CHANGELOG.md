@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.37.4-0020
+
+- en: Improve page loading reliability when signing in
+- zh-TW: 改善登入時頁面載入的穩定性
+- zh-CN: 改善登录时页面加载的稳定性
+- ja: サインイン時のページ読み込みの安定性を改善
+- ko: 로그인 시 페이지 로딩 안정성 개선
+- de: Zuverlässigkeit beim Laden von Seiten während der Anmeldung verbessern
+- fr: Améliorer la fiabilité du chargement des pages lors de la connexion
+- es: Mejorar la fiabilidad de la carga de páginas al iniciar sesión
+- it: Migliorare l’affidabilità del caricamento delle pagine durante l’accesso
+
+Rebuilt with SDK/App 0.53.21 and CLI 0.52.13. Upstream version and image
+digest are unchanged. Tests and device acceptance were not run for this rebuild.
+
 ## 1.37.4-0019
 
 - en: Fix the HTTPS link on the HTTP guidance page

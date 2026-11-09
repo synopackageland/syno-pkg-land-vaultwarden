@@ -1,4 +1,20 @@
-# Validation record
+# Validation
+
+## 1.37.4-0020: sign-in page loading
+
+Rebuilt with published SDK/App 0.53.21 and CLI 0.52.13 to improve page loading
+reliability when signing in. Concurrent asset requests share session admission
+and queue through the identity gateway. Upstream version and image digest are
+unchanged. This rebuild runs check, build, inspect comparison and privacy scans;
+unit, browser, container-runtime and device acceptance tests were not run.
+
+Offline comparison with 1.37.4-0019: permissions are unchanged,
+approval retention is `not-required`, root programs and policy changes are empty,
+and the task template is unchanged. `conf/privilege` still runs as the package
+account. The generated Compose resource changes `force_recreate` from true to
+false and the SDK ingress-check binary is rebuilt; neither adds root authority.
+
+## Previous release evidence (historical)
 
 ## 1.37.4-0018 secure-context guidance
 
