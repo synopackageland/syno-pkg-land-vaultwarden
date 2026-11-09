@@ -1,0 +1,57 @@
+{
+  "version": "1.37.4-0020",
+  "previous_version": "1.37.4-0019",
+  "toolchain": {
+    "cli": "0.52.13",
+    "templates": "0.40.1",
+    "sdk": "0.53.21",
+    "app": "0.53.21",
+    "executor": "0.53.5",
+    "ui_release_set": null,
+    "source_overrides": false,
+    "status": "published-framework-pins",
+    "executorTag": "executor/v0.53.5",
+    "goToolchain": "go1.26.10"
+  },
+  "arches": [
+    "x86_64"
+  ],
+  "spk": "SynoPkgVaultwarden-1.37.4-0020-x86_64.spk",
+  "spk_sha256": "c6fdad4499a19ea051b1b55c91daf8c4720b66cd42331bf5856632b3180ab45f",
+  "checks": {
+    "check": true,
+    "build": true,
+    "inspect": true,
+    "previous_spk_inspect": true,
+    "previous_spk_checksum": true
+  },
+  "findings": [],
+  "approval": {
+    "retention": "not-required",
+    "permissions": "unchanged",
+    "executor_only": false,
+    "task_template_changed": false,
+    "root_programs": [],
+    "policy_changes": [],
+    "reason": "No SDK administrator approval is required: this verified package has no executor or approval-requiring capability."
+  },
+  "privilege": {
+    "defaults": {
+      "run-as": "package"
+    }
+  },
+  "privilege_unchanged": true,
+  "upstream_files_modified": false,
+  "official_image_unchanged": true,
+  "image_built_locally": false,
+  "tests_run": false,
+  "nas_tested": false,
+  "source_overrides": false,
+  "generated_resource_change": {
+    "field": "docker.projects[0].build_params.force_recreate",
+    "previous": true,
+    "current": false,
+    "reason": "Generated Compose lifecycle resource from the updated published toolchain"
+  },
+  "generated_ingress_check_change": "SDK-generated ingress-check binary rebuilt with SDK 0.53.21; package run-as and approval policy unchanged"
+}
