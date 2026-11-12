@@ -1,5 +1,22 @@
 ## 1.37.4-0019
 
+## 1.37.4-0022: installation reliability
+
+Rebuilt with CLI 0.53.16. The ingress, gateway and Portal nginx reload is now
+declared only for package start and stop: INFO keeps
+`startstop_restart_services="nginx.service"` and no longer sets
+`instuninst_restart_services`. The install-time reload could collide with DSM
+`API.Info` and make Package Center show a `t.indexOf` error after installing.
+SDK, App runtime, upstream version and image are unchanged.
+
+This rebuild runs check, build, inspect comparison with 1.37.4-0021 and privacy
+scans; unit, browser, container-runtime and device acceptance tests were not run.
+
+Offline comparison with 1.37.4-0021: the only INFO change besides version and
+changelog is the removed `instuninst_restart_services`. Permissions are
+unchanged, approval retention is `not-required`, root programs and policy changes
+are empty, the task template and `conf/privilege` are unchanged.
+
 ## 1.37.4-0021: temporary files on disk
 
 Rebuilt with published SDK/App 0.53.25, CLI 0.52.16 and executor v0.53.6.

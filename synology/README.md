@@ -1,5 +1,14 @@
 # Vaultwarden for DSM
 
+## 1.37.4-0022: installation reliability
+
+Rebuilt with CLI 0.53.16. The ingress, gateway and Portal nginx reload is now
+declared only for package start and stop: INFO keeps
+`startstop_restart_services="nginx.service"` and no longer sets
+`instuninst_restart_services`. The install-time reload could collide with DSM
+`API.Info` and make Package Center show a `t.indexOf` error after installing.
+SDK, App runtime, upstream version and image are unchanged.
+
 ## 1.37.4-0021: temporary files on disk
 
 Rebuilt with published SDK/App 0.53.25, CLI 0.52.16 and executor v0.53.6.

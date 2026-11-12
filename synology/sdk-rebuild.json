@@ -1,8 +1,8 @@
 {
-  "version": "1.37.4-0021",
-  "previous_version": "1.37.4-0020",
+  "version": "1.37.4-0022",
+  "previous_version": "1.37.4-0021",
   "toolchain": {
-    "cli": "0.52.16",
+    "cli": "0.53.16",
     "templates": "0.40.1",
     "sdk": "0.53.25",
     "app": "0.53.25",
@@ -16,15 +16,14 @@
   "arches": [
     "x86_64"
   ],
-  "spk": "SynoPkgVaultwarden-1.37.4-0021-x86_64.spk",
-  "spk_sha256": "fcc1390d10b8ede723349f3d79f9ffc5502b087922ad5c83cd9fa08eca4bb358",
+  "spk": "SynoPkgVaultwarden-1.37.4-0022-x86_64.spk",
+  "spk_sha256": "3547ba228e41e7102eee14bcdc563bb34aaa3f7d631992431c06aecf532718c0",
   "checks": {
     "check": true,
     "build": true,
     "inspect": true,
     "previous_spk_inspect": true,
-    "previous_spk_checksum": true,
-    "tests": true
+    "previous_spk_checksum": true
   },
   "findings": [],
   "approval": {
@@ -45,19 +44,16 @@
   "upstream_files_modified": false,
   "official_image_unchanged": true,
   "image_built_locally": false,
-  "tests_run": true,
-  "nas_tested": true,
+  "tests_run": false,
+  "nas_tested": false,
   "source_overrides": false,
-  "generated_ingress_check_change": "SDK-generated ingress-check binary rebuilt with SDK 0.53.25; package run-as and approval policy unchanged",
-  "temporary_files": {
-    "scratch": [
-      "/tmp"
+  "info_change": {
+    "removed": [
+      "instuninst_restart_services"
     ],
-    "tmpfs": [],
-    "TMPDIR": "/tmp"
-  },
-  "healthcheck": {
-    "test": "CMD-SHELL curl loopback /alive",
-    "docker_health": "healthy"
+    "kept": {
+      "startstop_restart_services": "nginx.service"
+    },
+    "reason": "CLI 0.53.16 declares the nginx reload only for start and stop"
   }
 }
