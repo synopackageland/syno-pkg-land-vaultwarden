@@ -1,13 +1,13 @@
 schema: 2
 package: SynoPkgVaultwarden
-version: 1.37.4
-build: 22
+version: 1.37.5
+build: 1
 displayname: Vaultwarden
 icon: assets/icon.png
 description: Store and manage passwords and secure notes in an encrypted vault
 maintainer: Daniel García
 metadata:
-  changelog: {"en": "Improve installation reliability in Package Center", "zh-TW": "提升在套件中心安裝的穩定性", "zh-CN": "提升在套件中心安装的稳定性", "ja": "パッケージセンターでのインストールの安定性を向上", "ko": "패키지 센터에서의 설치 안정성 향상", "de": "Zuverlässigkeit der Installation im Paket-Zentrum verbessern", "fr": "Améliorer la fiabilité de l’installation dans le Centre de paquets", "es": "Mejorar la fiabilidad de la instalación en el Centro de paquetes", "it": "Migliorare l’affidabilità dell’installazione nel Centro pacchetti"}
+  changelog: {"en": "Update to Vaultwarden 1.37.5 with security fixes and web vault 2026.10.1", "zh-TW": "更新至 Vaultwarden 1.37.5，包含安全性修正與網頁保險庫 2026.10.1", "zh-CN": "更新至 Vaultwarden 1.37.5，包含安全修复与网页密码库 2026.10.1", "ja": "Vaultwarden 1.37.5 に更新（セキュリティ修正とウェブ保管庫 2026.10.1 を含む）", "ko": "Vaultwarden 1.37.5로 업데이트(보안 수정 및 웹 보관함 2026.10.1 포함)", "de": "Auf Vaultwarden 1.37.5 mit Sicherheitskorrekturen und Web-Tresor 2026.10.1 aktualisieren", "fr": "Mise à jour vers Vaultwarden 1.37.5 avec correctifs de sécurité et coffre web 2026.10.1", "es": "Actualización a Vaultwarden 1.37.5 con correcciones de seguridad y la caja fuerte web 2026.10.1", "it": "Aggiornamento a Vaultwarden 1.37.5 con correzioni di sicurezza e cassaforte web 2026.10.1"}
   maintainer_url: https://github.com/dani-garcia/vaultwarden
   distributor: Syno Package Land
   distributor_url: https://synopkgland.com/
