@@ -1,5 +1,19 @@
 # Validation
 
+## 1.37.5-0001: upstream 1.37.5
+
+Upstream upgrade to Vaultwarden 1.37.5 (official image
+`vaultwarden/server:1.37.5@sha256:4fe17f415f90087377d37c755e0ea3cf189dcc6794e49cdd2a9adbb4937d9e1f`,
+revision label `6ed6921c` = tag `1.37.5`). Upstream fixes two security advisories
+(website icons, emergency access), bundles web vault 2026.10.1 and now rejects
+invalid configuration values at startup; the package environment sets none of
+the affected options. The upstream tag is merged into the fork without changes
+to upstream files. CLI 0.53.16, SDK/App 0.53.25 and the packaging are unchanged.
+
+This upgrade runs check, build, inspect comparison with 1.37.4-0022 and
+privacy scans; unit, browser, container-runtime and device acceptance tests
+were not run.
+
 ## 1.37.4-0022: installation reliability
 
 Rebuilt with CLI 0.53.16. The ingress, gateway and Portal nginx reload is now

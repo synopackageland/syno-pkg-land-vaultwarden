@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.37.5-0001
+
+- en: Update to Vaultwarden 1.37.5 with security fixes and web vault 2026.10.1
+- zh-TW: 更新至 Vaultwarden 1.37.5，包含安全性修正與網頁保險庫 2026.10.1
+- zh-CN: 更新至 Vaultwarden 1.37.5，包含安全修复与网页密码库 2026.10.1
+- ja: Vaultwarden 1.37.5 に更新（セキュリティ修正とウェブ保管庫 2026.10.1 を含む）
+- ko: Vaultwarden 1.37.5로 업데이트(보안 수정 및 웹 보관함 2026.10.1 포함)
+- de: Auf Vaultwarden 1.37.5 mit Sicherheitskorrekturen und Web-Tresor 2026.10.1 aktualisieren
+- fr: Mise à jour vers Vaultwarden 1.37.5 avec correctifs de sécurité et coffre web 2026.10.1
+- es: Actualización a Vaultwarden 1.37.5 con correcciones de seguridad y la caja fuerte web 2026.10.1
+- it: Aggiornamento a Vaultwarden 1.37.5 con correzioni di sicurezza e cassaforte web 2026.10.1
+
+Upstream upgrade to Vaultwarden 1.37.5 (official image
+`vaultwarden/server:1.37.5@sha256:4fe17f415f90087377d37c755e0ea3cf189dcc6794e49cdd2a9adbb4937d9e1f`,
+revision label `6ed6921c` = tag `1.37.5`). Upstream fixes two security advisories
+(website icons, emergency access), bundles web vault 2026.10.1 and now rejects
+invalid configuration values at startup; the package environment sets none of
+the affected options. The upstream tag is merged into the fork without changes
+to upstream files. CLI 0.53.16, SDK/App 0.53.25 and the packaging are unchanged.
+
 ## 1.37.4-0022
 
 - en: Improve installation reliability in Package Center

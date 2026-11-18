@@ -1,6 +1,6 @@
 {
   "name": "syno-pkg-land-vaultwarden",
-  "version": "1.37.4-0021",
+  "version": "1.37.5-0001",
   "private": true,
   "type": "module",
   "license": "MIT",
